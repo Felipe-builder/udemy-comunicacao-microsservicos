@@ -1,0 +1,58 @@
+version: '3.1'
+
+services:
+  auth-db:
+    container_name: auth-db
+    image: postgres:11
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: auth-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./datas/auth_data:/var/lib/postgresql/data
+    restart: always
+
+  product-db:
+    container_name: product-db
+    image: postgres:11
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: product-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./datas/product_data:/var/lib/postgresql/data
+    restart: always
+
+  sales-db:
+    container_name: sales-db
+    image: mongo:7
+    ports:
+      - "27017:27017"
+      - "28017:28017"
+    volumes:
+      - ./datas/sales_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    restart: always
+
+  sales-rabbit:
+    container_name: sales-rabbit
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "25672:25672"
+      - "15672:15672"
+    volumes:
+      - ./datas/sales_rabbit:/data/db
+    restart: always
+
+
+
+
