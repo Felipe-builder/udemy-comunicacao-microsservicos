@@ -1,0 +1,12 @@
+{
+  "name": "udemy-comunicacao-microsservicos",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "github-pessoal:Felipe-builder/udemy-comunicacao-microsservicos.git",
+  "author": "Felipe Vasconcelos <felipesvascon@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.3"
+  }
+}
