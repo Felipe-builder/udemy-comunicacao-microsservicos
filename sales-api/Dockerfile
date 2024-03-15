@@ -1,6 +1,6 @@
-FROM node:20.11
-
-WORKDIR .
+FROM node:20.11-alpine3.18
+# node:20.11
+WORKDIR /app
 COPY package*.json ./
 
 RUN yarn

@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  sales-app:
+    container_name: sales-app
+    build: .
+    ports:
+      - "8082:8082"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - sales-db
+
+  sales-db:
+    container_name: sales-db
+    image: postgres:11
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: sales-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    restart: always
+volumes:
+  postgres-volume:
+    external: true
