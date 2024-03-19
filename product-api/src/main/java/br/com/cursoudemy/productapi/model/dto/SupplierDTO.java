@@ -1,27 +1,16 @@
-package br.com.cursoudemy.productapi.model;
+package br.com.cursoudemy.productapi.model.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "tb_supplier")
-public class Supplier {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+public class SupplierDTO {
+
   private String id;
-  
-  @Column(name = "name", nullable = false, unique = true)
   private String name;
 
-  public Supplier() {
+  public SupplierDTO() {
   }
-
-  public Supplier(String id, String name) {
+  
+  public SupplierDTO(String id, String name) {
     this.id = id;
     this.name = name;
   }
@@ -29,12 +18,15 @@ public class Supplier {
   public String getId() {
     return id;
   }
+
   public void setId(String id) {
     this.id = id;
   }
+
   public String getName() {
     return name;
   }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -56,7 +48,7 @@ public class Supplier {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Supplier other = (Supplier) obj;
+    SupplierDTO other = (SupplierDTO) obj;
     if (id == null) {
       if (other.id != null)
         return false;
@@ -72,8 +64,6 @@ public class Supplier {
 
   @Override
   public String toString() {
-    return "Supplier [id=" + id + ", name=" + name + "]";
+    return "SupplierDTO [id=" + id + ", name=" + name + "]";
   }
-
-  
 }

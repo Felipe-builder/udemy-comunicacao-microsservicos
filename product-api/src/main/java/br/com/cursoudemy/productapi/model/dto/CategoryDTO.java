@@ -1,29 +1,15 @@
-package br.com.cursoudemy.productapi.model;
+package br.com.cursoudemy.productapi.model.dto;
 
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "tb_category")
-public class Category {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+public class CategoryDTO {
   private UUID id;
-
-  @Column(name = "description", nullable = false, unique = true)
   private String description;
 
-  public Category() {
+  public CategoryDTO() {
   }
 
-  public Category(UUID id, String description) {
+  public CategoryDTO(UUID id, String description) {
     this.id = id;
     this.description = description;
   }
@@ -32,16 +18,8 @@ public class Category {
     return id;
   }
 
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
   public String getDescription() {
     return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   @Override
@@ -61,7 +39,7 @@ public class Category {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Category other = (Category) obj;
+    CategoryDTO other = (CategoryDTO) obj;
     if (id == null) {
       if (other.id != null)
         return false;
@@ -77,7 +55,7 @@ public class Category {
 
   @Override
   public String toString() {
-    return "Category [id=" + id + ", description=" + description + "]";
+    return "CategoryDTO [id=" + id + ", description=" + description + "]";
   }
 
 }

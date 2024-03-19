@@ -1,51 +1,27 @@
-package br.com.cursoudemy.productapi.model;
+package br.com.cursoudemy.productapi.model.dto;
 
+import br.com.cursoudemy.productapi.model.Category;
+import br.com.cursoudemy.productapi.model.Supplier;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+public class ProductDTO {
 
-@Entity
-@Table(name = "tb_product")
-public class Product {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
 
-  @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "quantity_available", nullable = false)
   private int quantityAvailable;
 
-  @ManyToOne
-  @JoinColumn(name = "fk_category", nullable = false)
   private Category category;
   
-  @ManyToOne
-  @JoinColumn(name = "fk_supplier", nullable = false)
   private Supplier supplier;
 
-
-
-  public Product() {
+  public ProductDTO() {
   }
 
-  public Product(String name, int quantityAvailable, Category category, Supplier supplier) {
-    this.name = name;
-    this.category = category;
-    this.supplier = supplier;
-  }
-
-  public Product(String id, String name, int quantityAvailable, Category category, Supplier supplier) {
+  public ProductDTO(String id, String name, int quantityAvailable, Category category, Supplier supplier) {
     this.id = id;
     this.name = name;
+    this.quantityAvailable = quantityAvailable;
     this.category = category;
     this.supplier = supplier;
   }
@@ -90,7 +66,6 @@ public class Product {
     this.supplier = supplier;
   }
 
- 
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -111,7 +86,7 @@ public class Product {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Product other = (Product) obj;
+    ProductDTO other = (ProductDTO) obj;
     if (id == null) {
       if (other.id != null)
         return false;
@@ -139,7 +114,9 @@ public class Product {
 
   @Override
   public String toString() {
-    return "Product [id=" + id + ", name=" + name + ", quantityAvailable=" + quantityAvailable + ", category="
+    return "ProductDTO [id=" + id + ", name=" + name + ", quantityAvailable=" + quantityAvailable + ", category="
         + category + ", supplier=" + supplier + "]";
   }
+
+  
 }
