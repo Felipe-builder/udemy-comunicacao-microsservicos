@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.cursoudemy.productapi.mapper.CategoryMapper;
 import br.com.cursoudemy.productapi.model.Category;
-import br.com.cursoudemy.productapi.model.dto.CategoryDTO;
+import br.com.cursoudemy.productapi.model.dto.CategoryRequest;
+import br.com.cursoudemy.productapi.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.repository.CategoryRepository;
 
 @Service
@@ -19,12 +20,12 @@ public class CategoryService {
   @Autowired
   private CategoryRepository categoryRepository;
 
-  public CategoryDTO create(CategoryDTO dto) {
-    Category created = categoryRepository.save(categoryMapper.toEntity(dto));
-    return categoryMapper.toDto(created);
+  public CategoryResponse create(CategoryRequest dto) {
+      Category created = categoryRepository.save(categoryMapper.toEntity(dto));
+      return categoryMapper.toDto(created);
   }
 
-  public List<CategoryDTO> findAll() {
+  public List<CategoryResponse> findAll() {
     List<Category> categories = categoryRepository.findAll();
     return categoryMapper.toDto(categories);
   } 

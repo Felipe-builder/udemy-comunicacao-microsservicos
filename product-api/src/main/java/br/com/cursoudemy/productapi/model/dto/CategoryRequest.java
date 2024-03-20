@@ -1,32 +1,30 @@
 package br.com.cursoudemy.productapi.model.dto;
 
-import java.util.UUID;
 
-public class CategoryDTO {
-  private UUID id;
+public class CategoryRequest {
   private String description;
+  
 
-  public CategoryDTO() {
+  public CategoryRequest() {
   }
 
-  public CategoryDTO(UUID id, String description) {
-    this.id = id;
+  public CategoryRequest(String description) {
     this.description = description;
   }
 
-  public UUID getId() {
-    return id;
-  }
-
   public String getDescription() {
-    return description;
+    return this.description;
   }
 
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((description == null) ? 0 : description.hashCode());
     return result;
   }
@@ -39,12 +37,7 @@ public class CategoryDTO {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    CategoryDTO other = (CategoryDTO) obj;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
-      return false;
+    CategoryRequest other = (CategoryRequest) obj;
     if (description == null) {
       if (other.description != null)
         return false;
@@ -55,7 +48,9 @@ public class CategoryDTO {
 
   @Override
   public String toString() {
-    return "CategoryDTO [id=" + id + ", description=" + description + "]";
+    return "{" +
+      " description='" + getDescription() + "'" +
+      "}";
   }
-
+  
 }

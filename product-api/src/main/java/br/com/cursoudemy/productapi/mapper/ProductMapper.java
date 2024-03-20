@@ -1,5 +1,8 @@
 package br.com.cursoudemy.productapi.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import br.com.cursoudemy.productapi.model.Product;
@@ -16,6 +19,11 @@ public class ProductMapper {
       entity.getCategory(),
       entity.getSupplier()
     );
+  }
+
+
+  public List<ProductDTO> toDto(List<Product> entites) {
+    return entites.stream().map(entity -> this.toDto(entity)).collect(Collectors.toList());
   }
 
 }

@@ -1,9 +1,14 @@
 package br.com.cursoudemy.productapi.service;
 
+import java.rmi.server.UID;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
+import br.com.cursoudemy.productapi.exceptions.NotFoundException;
 import br.com.cursoudemy.productapi.mapper.ProductMapper;
 import br.com.cursoudemy.productapi.model.Category;
 import br.com.cursoudemy.productapi.model.Product;
@@ -30,15 +35,20 @@ public class ProductService {
   private SupplierRepository supplierRepository;
 
   public ProductDTO create(CreateProductDTO dto) {
-
     Category category = categoryRepository.findById(dto.getCategoryId())
-        .orElseThrow(() -> new RuntimeException("Category not Found"));
+        .orElseThrow(() -> new NotFoundException("Category not Found"));
     Supplier supplier = supplierRepository.findById(dto.getSupplierId())
-        .orElseThrow(() -> new RuntimeException("Supplier not Found"));
+        .orElseThrow(() -> new NotFoundException("Supplier not Found"));
 
-    Product entity = new Product(dto.getName(), dto.getQuantityAvailable(), category, supplier);
+    Product entity = new Product(UUID.randomUUID(), dto.getName(), dto.getQuantityAvailable(), category, supplier);
     
     return productMapper.toDto(productRepository.save(entity));
   }
+
+  public List<ProductDTO> findAll() {
+    return productMapper.toDto(productRepository.findAll());
+  }
+
+
 
 }

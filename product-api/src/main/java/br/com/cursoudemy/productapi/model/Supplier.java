@@ -1,5 +1,7 @@
 package br.com.cursoudemy.productapi.model;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ public class Supplier {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String id;
+  private UUID id;
   
   @Column(name = "name", nullable = false, unique = true)
   private String name;
@@ -21,15 +23,15 @@ public class Supplier {
   public Supplier() {
   }
 
-  public Supplier(String id, String name) {
+  public Supplier(UUID id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
   public String getName() {

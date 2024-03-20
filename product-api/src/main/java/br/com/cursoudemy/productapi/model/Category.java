@@ -23,6 +23,10 @@ public class Category {
   public Category() {
   }
 
+  public Category( String description) {
+    this.description = description;
+  }
+
   public Category(UUID id, String description) {
     this.id = id;
     this.description = description;

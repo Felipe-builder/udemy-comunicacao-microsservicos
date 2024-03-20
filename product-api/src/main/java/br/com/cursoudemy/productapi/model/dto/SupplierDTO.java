@@ -1,25 +1,25 @@
 package br.com.cursoudemy.productapi.model.dto;
 
-
+import java.util.UUID;
 
 public class SupplierDTO {
 
-  private String id;
+  private UUID id;
   private String name;
 
   public SupplierDTO() {
   }
   
-  public SupplierDTO(String id, String name) {
+  public SupplierDTO(UUID id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.cursoudemy.productapi.model.dto.CategoryDTO;
+import br.com.cursoudemy.productapi.model.dto.CategoryRequest;
+import br.com.cursoudemy.productapi.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.service.CategoryService;
 
 @RestController
@@ -21,14 +22,14 @@ public class CategoryController {
   private CategoryService categoryService;
 
   @PostMapping
-  public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO dto) {
-    CategoryDTO response = categoryService.create(dto);
+  public ResponseEntity<CategoryResponse> create(@RequestBody CategoryRequest request) {
+    CategoryResponse response = categoryService.create(request);
     return ResponseEntity.created(null).body(response);
   }
 
   @GetMapping
-  public ResponseEntity<List<CategoryDTO>> findAll() {
-    List<CategoryDTO> response = categoryService.findAll();
+  public ResponseEntity<List<CategoryResponse>> findAll() {
+    List<CategoryResponse> response = categoryService.findAll();
     return ResponseEntity.ok(response);
   }
 }

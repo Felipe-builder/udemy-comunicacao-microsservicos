@@ -1,15 +1,17 @@
 package br.com.cursoudemy.productapi.model.dto;
 
+import java.util.UUID;
+
 import br.com.cursoudemy.productapi.model.Category;
 import br.com.cursoudemy.productapi.model.Supplier;
 
 public class ProductDTO {
 
-  private String id;
+  private UUID id;
 
   private String name;
 
-  private int quantityAvailable;
+  private Integer quantityAvailable;
 
   private Category category;
   
@@ -18,7 +20,7 @@ public class ProductDTO {
   public ProductDTO() {
   }
 
-  public ProductDTO(String id, String name, int quantityAvailable, Category category, Supplier supplier) {
+  public ProductDTO(UUID id, String name, Integer quantityAvailable, Category category, Supplier supplier) {
     this.id = id;
     this.name = name;
     this.quantityAvailable = quantityAvailable;
@@ -26,11 +28,11 @@ public class ProductDTO {
     this.supplier = supplier;
   }
 
-  public String getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
@@ -42,11 +44,11 @@ public class ProductDTO {
     this.name = name;
   }
 
-  public int getQuantityAvailable() {
+  public Integer getQuantityAvailable() {
     return quantityAvailable;
   }
 
-  public void setQuantityAvailable(int quantityAvailable) {
+  public void setQuantityAvailable(Integer quantityAvailable) {
     this.quantityAvailable = quantityAvailable;
   }
 
@@ -72,7 +74,7 @@ public class ProductDTO {
     int result = 1;
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + quantityAvailable;
+    result = prime * result + ((quantityAvailable == null) ? 0 : quantityAvailable.hashCode());
     result = prime * result + ((category == null) ? 0 : category.hashCode());
     result = prime * result + ((supplier == null) ? 0 : supplier.hashCode());
     return result;
@@ -97,7 +99,10 @@ public class ProductDTO {
         return false;
     } else if (!name.equals(other.name))
       return false;
-    if (quantityAvailable != other.quantityAvailable)
+    if (quantityAvailable == null) {
+      if (other.quantityAvailable != null)
+        return false;
+    } else if (!quantityAvailable.equals(other.quantityAvailable))
       return false;
     if (category == null) {
       if (other.category != null)
@@ -118,5 +123,5 @@ public class ProductDTO {
         + category + ", supplier=" + supplier + "]";
   }
 
-  
+ 
 }

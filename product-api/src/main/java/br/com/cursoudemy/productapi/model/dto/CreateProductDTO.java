@@ -2,22 +2,28 @@ package br.com.cursoudemy.productapi.model.dto;
 
 import java.util.UUID;
 
+import jakarta.validation.constraints.NotNull;
+
 public class CreateProductDTO {
 
   private String id;
 
+  @NotNull(message = "name cannot be null")
   private String name;
 
-  private int quantityAvailable;
+  @NotNull(message = "quantityAvailable cannot be null")
+  private Integer quantityAvailable;
 
+  @NotNull(message = "categoryId cannot be null")
   private UUID categoryId;
   
+  @NotNull(message = "categoryId cannot be null")
   private UUID supplierId;
 
   public CreateProductDTO() {
   }
 
-  public CreateProductDTO(String id, String name, int quantityAvailable, UUID categoryId, UUID supplierId) {
+  public CreateProductDTO(String id, String name, Integer quantityAvailable, UUID categoryId, UUID supplierId) {
     this.id = id;
     this.name = name;
     this.quantityAvailable = quantityAvailable;
@@ -41,11 +47,11 @@ public class CreateProductDTO {
     this.name = name;
   }
 
-  public int getQuantityAvailable() {
+  public Integer getQuantityAvailable() {
     return quantityAvailable;
   }
 
-  public void setQuantityAvailable(int quantityAvailable) {
+  public void setQuantityAvailable(Integer quantityAvailable) {
     this.quantityAvailable = quantityAvailable;
   }
 
@@ -71,7 +77,7 @@ public class CreateProductDTO {
     int result = 1;
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + quantityAvailable;
+    result = prime * result + ((quantityAvailable == null) ? 0 : quantityAvailable.hashCode());
     result = prime * result + ((categoryId == null) ? 0 : categoryId.hashCode());
     result = prime * result + ((supplierId == null) ? 0 : supplierId.hashCode());
     return result;
@@ -96,7 +102,10 @@ public class CreateProductDTO {
         return false;
     } else if (!name.equals(other.name))
       return false;
-    if (quantityAvailable != other.quantityAvailable)
+    if (quantityAvailable == null) {
+      if (other.quantityAvailable != null)
+        return false;
+    } else if (!quantityAvailable.equals(other.quantityAvailable))
       return false;
     if (categoryId == null) {
       if (other.categoryId != null)
@@ -117,5 +126,6 @@ public class CreateProductDTO {
         + ", categoryId=" + categoryId + ", supplierId=" + supplierId + "]";
   }
 
+  
 }
 
