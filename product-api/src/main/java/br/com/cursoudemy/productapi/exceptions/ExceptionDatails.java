@@ -1,18 +1,19 @@
 package br.com.cursoudemy.productapi.exceptions;
+
 import java.util.Date;
 import java.util.List;
 
 public class ExceptionDatails {
 
 	private Date timestamp;
-  private int status;
+	private int status;
 	private String message;
 	private String details;
 	private List<String> errors;
 
 	public ExceptionDatails(Date timestamp, int status, String message, String details) {
 		this.timestamp = timestamp;
-    this.status = status;
+		this.status = status;
 		this.message = message;
 		this.details = details;
 	}
@@ -21,9 +22,9 @@ public class ExceptionDatails {
 		return timestamp;
 	}
 
-  public int getStatus() {
-    return status;
-  }
+	public int getStatus() {
+		return status;
+	}
 
 	public String getMessage() {
 		return message;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,14 @@ import br.com.cursoudemy.productapi.exceptions.NotFoundException;
 import br.com.cursoudemy.productapi.exceptions.ValidationException;
 
 @ControllerAdvice
-public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler{
+public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
 
   @Override
-  protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-      HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException ex,
+      HttpHeaders headers,
+      HttpStatusCode status,
+      WebRequest request) {
     List<String> errors = new ArrayList<>();
     for (FieldError error : ex.getBindingResult().getFieldErrors()) {
       errors.add(error.getField() + ": " + error.getDefaultMessage());
@@ -40,26 +44,41 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler{
     return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
   }
 
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+      HttpMessageNotReadableException ex,
+      HttpHeaders headers,
+      HttpStatusCode status,
+      WebRequest request) {
+    ExceptionDatails errorDetails = new ExceptionDatails(
+        new Date(),
+        status.value(),
+        ex.getMessage(),
+        request.getDescription(false));
+    return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+  }
+
+
   @ExceptionHandler(Exception.class)
-	public final ResponseEntity<ExceptionDatails> handleAllExceptions(Exception ex, WebRequest request) {
-		ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 500, ex.getMessage(),
-				request.getDescription(false));
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+  public final ResponseEntity<ExceptionDatails> handleAllExceptions(Exception ex, WebRequest request) {
+    ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 500, ex.getMessage(),
+        request.getDescription(false));
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
   @ExceptionHandler(NotFoundException.class)
-	public final ResponseEntity<ExceptionDatails> handleNotFoundExceptions(Exception ex, WebRequest request) {
-		ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 404, ex.getMessage(),
-				request.getDescription(false));
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-	}
+  public final ResponseEntity<ExceptionDatails> handleNotFoundExceptions(Exception ex, WebRequest request) {
+    ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 404, ex.getMessage(),
+        request.getDescription(false));
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+  }
 
   @ExceptionHandler(DataIntegrityViolationException.class)
-	public final ResponseEntity<ExceptionDatails> handleDataIntegrityViolationException(Exception ex, WebRequest request) {
-    String errorMessage = "Erro de integridade de dados: " + ex.getMessage();
-		ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 400, errorMessage,
-				request.getDescription(false));
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-	}
-
+  public final ResponseEntity<ExceptionDatails> handleDataIntegrityViolationException(Exception ex,
+      WebRequest request) {
+    String errorMessage = "Data integrity error: " + ex.getMessage();
+    ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 400, errorMessage,
+        request.getDescription(false));
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
 }
