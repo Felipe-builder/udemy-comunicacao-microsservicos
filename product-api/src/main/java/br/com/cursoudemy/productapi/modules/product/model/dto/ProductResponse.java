@@ -1,9 +1,13 @@
 package br.com.cursoudemy.productapi.modules.product.model.dto;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.cursoudemy.productapi.modules.category.model.Category;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
+import java.util.Objects;
 
 public class ProductResponse {
 
@@ -11,21 +15,31 @@ public class ProductResponse {
 
   private String name;
 
+  @JsonProperty("quantity_available")
   private Integer quantityAvailable;
 
   private Category category;
-  
+
   private Supplier supplier;
+
+  @JsonProperty("created_at")
+  private LocalDateTime createdAt;
+
+  @JsonProperty("updated_at")
+  private LocalDateTime updatedAt;
 
   public ProductResponse() {
   }
 
-  public ProductResponse(UUID id, String name, Integer quantityAvailable, Category category, Supplier supplier) {
+  public ProductResponse(UUID id, String name, Integer quantityAvailable, Category category, Supplier supplier,
+      LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.id = id;
     this.name = name;
     this.quantityAvailable = quantityAvailable;
     this.category = category;
     this.supplier = supplier;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   public UUID getId() {
@@ -68,60 +82,52 @@ public class ProductResponse {
     this.supplier = supplier;
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + ((quantityAvailable == null) ? 0 : quantityAvailable.hashCode());
-    result = prime * result + ((category == null) ? 0 : category.hashCode());
-    result = prime * result + ((supplier == null) ? 0 : supplier.hashCode());
-    return result;
+  public LocalDateTime getCreatedAt() {
+    return this.createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return this.updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
+  public boolean equals(Object o) {
+    if (o == this)
       return true;
-    if (obj == null)
+    if (!(o instanceof ProductResponse)) {
       return false;
-    if (getClass() != obj.getClass())
-      return false;
-    ProductResponse other = (ProductResponse) obj;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
-      return false;
-    if (name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!name.equals(other.name))
-      return false;
-    if (quantityAvailable == null) {
-      if (other.quantityAvailable != null)
-        return false;
-    } else if (!quantityAvailable.equals(other.quantityAvailable))
-      return false;
-    if (category == null) {
-      if (other.category != null)
-        return false;
-    } else if (!category.equals(other.category))
-      return false;
-    if (supplier == null) {
-      if (other.supplier != null)
-        return false;
-    } else if (!supplier.equals(other.supplier))
-      return false;
-    return true;
+    }
+    ProductResponse productResponse = (ProductResponse) o;
+    return Objects.equals(id, productResponse.id) && Objects.equals(name, productResponse.name)
+        && Objects.equals(quantityAvailable, productResponse.quantityAvailable)
+        && Objects.equals(category, productResponse.category) && Objects.equals(supplier, productResponse.supplier)
+        && Objects.equals(createdAt, productResponse.createdAt) && Objects.equals(updatedAt, productResponse.updatedAt);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, quantityAvailable, category, supplier, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
-    return "ProductDTO [id=" + id + ", name=" + name + ", quantityAvailable=" + quantityAvailable + ", category="
-        + category + ", supplier=" + supplier + "]";
+    return "{" +
+        " id='" + getId() + "'" +
+        ", name='" + getName() + "'" +
+        ", quantityAvailable='" + getQuantityAvailable() + "'" +
+        ", category='" + getCategory() + "'" +
+        ", supplier='" + getSupplier() + "'" +
+        ", createdAt='" + getCreatedAt() + "'" +
+        ", updatedAt='" + getUpdatedAt() + "'" +
+        "}";
   }
 
- 
 }

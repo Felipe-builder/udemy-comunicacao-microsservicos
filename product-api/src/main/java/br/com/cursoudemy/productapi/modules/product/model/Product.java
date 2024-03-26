@@ -1,7 +1,10 @@
 package br.com.cursoudemy.productapi.modules.product.model;
 
-
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import br.com.cursoudemy.productapi.modules.category.model.Category;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
@@ -31,14 +34,27 @@ public class Product {
   @ManyToOne
   @JoinColumn(name = "fk_category", nullable = false)
   private Category category;
-  
+
   @ManyToOne
   @JoinColumn(name = "fk_supplier", nullable = false)
   private Supplier supplier;
 
+  @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
   public Product() {
+  }
+
+  public Product( String name, Integer quantityAvailable, Category category, Supplier supplier) {
+    this.name = name;
+    this.quantityAvailable = quantityAvailable;
+    this.category = category;
+    this.supplier = supplier;
   }
 
   public Product(UUID id, String name, Integer quantityAvailable, Category category, Supplier supplier) {
@@ -87,6 +103,14 @@ public class Product {
 
   public void setSupplier(Supplier supplier) {
     this.supplier = supplier;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
   }
 
   @Override
@@ -144,6 +168,4 @@ public class Product {
         + category + ", supplier=" + supplier + "]";
   }
 
- 
- 
 }

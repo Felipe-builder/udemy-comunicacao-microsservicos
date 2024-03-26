@@ -24,22 +24,12 @@ public class SupplierResponse {
     this.id = id;
   }
 
-  public String getname() {
+  public String getName() {
     return this.name;
   }
 
-  public void setname(String name) {
+  public void setName(String name) {
     this.name = name;
-  }
-
-  public SupplierResponse id(UUID id) {
-    setId(id);
-    return this;
-  }
-
-  public SupplierResponse name(String name) {
-    setname(name);
-    return this;
   }
 
   @Override
@@ -62,7 +52,7 @@ public class SupplierResponse {
   public String toString() {
     return "{" +
         " id='" + getId() + "'" +
-        ", name='" + getname() + "'" +
+        ", name='" + getName() + "'" +
         "}";
   }
 

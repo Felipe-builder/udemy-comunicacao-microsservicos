@@ -1,10 +1,12 @@
 package br.com.cursoudemy.productapi.modules.supplier.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.cursoudemy.productapi.exceptions.NotFoundException;
 import br.com.cursoudemy.productapi.modules.supplier.mapper.SupplierMapper;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierRequest;
@@ -28,5 +30,12 @@ public class SupplierService {
   public List<SupplierResponse> findAll() {
     return supplierMapper.toDto(supplierRepository.findAll());
   }
+
+public Supplier findById(UUID supplierId) {
+    return supplierRepository
+            .findById(supplierId)
+            .orElseThrow(() -> new NotFoundException("There's no supplier for the given ID."));
+
+}
 
 }
