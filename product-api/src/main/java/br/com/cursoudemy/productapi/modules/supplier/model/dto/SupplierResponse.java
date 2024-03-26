@@ -1,0 +1,69 @@
+package br.com.cursoudemy.productapi.modules.supplier.model.dto;
+
+import java.util.UUID;
+
+import java.util.Objects;
+
+public class SupplierResponse {
+  private UUID id;
+  private String name;
+
+  public SupplierResponse() {
+  }
+
+  public SupplierResponse(UUID id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
+  public UUID getId() {
+    return this.id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
+  public String getname() {
+    return this.name;
+  }
+
+  public void setname(String name) {
+    this.name = name;
+  }
+
+  public SupplierResponse id(UUID id) {
+    setId(id);
+    return this;
+  }
+
+  public SupplierResponse name(String name) {
+    setname(name);
+    return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this)
+      return true;
+    if (!(o instanceof SupplierResponse)) {
+      return false;
+    }
+    SupplierResponse categoryResponse = (SupplierResponse) o;
+    return Objects.equals(id, categoryResponse.id) && Objects.equals(name, categoryResponse.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name);
+  }
+
+  @Override
+  public String toString() {
+    return "{" +
+        " id='" + getId() + "'" +
+        ", name='" + getname() + "'" +
+        "}";
+  }
+
+}
