@@ -1,5 +1,6 @@
 package br.com.cursoudemy.productapi.modules.supplier.service;
 
+
 import java.util.List;
 import java.util.UUID;
 
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.cursoudemy.productapi.exceptions.NotFoundException;
+import br.com.cursoudemy.productapi.modules.category.model.Category;
+import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.modules.supplier.mapper.SupplierMapper;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierRequest;
@@ -31,11 +34,24 @@ public class SupplierService {
     return supplierMapper.toDto(supplierRepository.findAll());
   }
 
-public Supplier findById(UUID supplierId) {
+  public Supplier findById(UUID supplierId) {
     return supplierRepository
-            .findById(supplierId)
-            .orElseThrow(() -> new NotFoundException("There's no supplier for the given ID."));
+        .findById(supplierId)
+        .orElseThrow(() -> new NotFoundException("There's no supplier for the given ID."));
 
-}
+  }
+
+  public SupplierResponse findByIdResponse(UUID supplierId) {
+    Supplier entity = supplierRepository
+        .findById(supplierId)
+        .orElseThrow(() -> new NotFoundException("There's no supplier for the given ID."));
+    return supplierMapper.toDto(entity);
+  }
+
+  public List<SupplierResponse> findByName(String name) {
+    List<Supplier> listEntites = supplierRepository
+                        .findByNameIgnoreCaseContaining(name);
+    return supplierMapper.toDto(listEntites);
+  }
 
 }
