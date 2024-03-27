@@ -2,21 +2,30 @@ package br.com.cursoudemy.productapi.modules.product.model.dto;
 
 import java.util.UUID;
 
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductRequest {
 
 
-  @NotNull(message = "name cannot be null")
+  @NotBlank(message = "'name' must be required and does not be empty")
+  @Size(min = 3, message = "'name' must be at least 3 characters")
   private String name;
 
-  @NotNull(message = "quantityAvailable cannot be null")
+  @NotNull(message = "quantity_available cannot be null")
+  @Min(value = 0, message = "quantity_available must be 0 or greater")
   private Integer quantityAvailable;
 
-  @NotNull(message = "categoryId cannot be null")
+  @NotNull(message = "category_id cannot be null")
   private UUID categoryId;
   
-  @NotNull(message = "categoryId cannot be null")
+  @NotNull(message = "supplier_id cannot be null")
   private UUID supplierId;
 
   public ProductRequest() {

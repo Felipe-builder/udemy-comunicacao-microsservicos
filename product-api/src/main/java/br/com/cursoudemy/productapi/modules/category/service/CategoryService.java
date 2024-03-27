@@ -38,4 +38,17 @@ public class CategoryService {
         .orElseThrow(() -> new NotFoundException("There's no category for the given ID."));
   }
 
+  public CategoryResponse findByIdResponse(UUID categoryId) {
+    Category entity = categoryRepository
+        .findById(categoryId)
+        .orElseThrow(() -> new NotFoundException("There's no category for the given ID."));
+    return categoryMapper.toDto(entity);
+  }
+
+  public List<CategoryResponse> findByDescription(String description) {
+    List<Category> listEntites = categoryRepository
+                        .findByDescriptionIgnoreCaseContaining(description);
+    return categoryMapper.toDto(listEntites);
+  }
+
 }

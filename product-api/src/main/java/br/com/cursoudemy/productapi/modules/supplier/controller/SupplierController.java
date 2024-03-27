@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierRequest;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierResponse;
 import br.com.cursoudemy.productapi.modules.supplier.service.SupplierService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/supplier")
@@ -22,7 +23,7 @@ public class SupplierController {
   private SupplierService supplierService;
 
   @PostMapping
-  public ResponseEntity<SupplierResponse> create(@RequestBody SupplierRequest dto) {
+  public ResponseEntity<SupplierResponse> create(@Valid @RequestBody SupplierRequest dto) {
     SupplierResponse response = supplierService.create(dto);
     return ResponseEntity.created(null).body(response);
   }

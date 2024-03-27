@@ -1,9 +1,12 @@
 package br.com.cursoudemy.productapi.modules.category.model.dto;
 
+import java.util.Objects;
 import java.util.UUID;
 
-import java.util.Objects;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CategoryResponse {
   private UUID id;  
   private String description;

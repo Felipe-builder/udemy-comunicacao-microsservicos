@@ -4,18 +4,20 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import br.com.cursoudemy.productapi.modules.category.model.Category;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import java.util.Objects;
 
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductResponse {
 
   private UUID id;
 
   private String name;
 
-  @JsonProperty("quantity_available")
   private Integer quantityAvailable;
 
   private Category category;
