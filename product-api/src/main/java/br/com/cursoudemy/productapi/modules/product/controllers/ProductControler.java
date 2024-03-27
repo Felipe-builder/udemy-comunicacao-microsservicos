@@ -1,15 +1,18 @@
 package br.com.cursoudemy.productapi.modules.product.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
 import br.com.cursoudemy.productapi.modules.product.service.ProductService;
@@ -31,7 +34,31 @@ public class ProductControler {
   @GetMapping()
   public ResponseEntity<List<ProductResponse>> findAll() {
     List<ProductResponse> response = productService.findAll();
+    return ResponseEntity.ok(response);
+  }
 
+  @GetMapping("{id}")
+  public ResponseEntity<ProductResponse> findById(@PathVariable UUID id) {
+    ProductResponse response = productService.findByIdResponse(id);
+    return ResponseEntity.ok(response);
+  }
+
+  
+  @GetMapping("name/{name}")
+  public ResponseEntity<List<ProductResponse>> findByName(@PathVariable String name) {
+    List<ProductResponse> response = productService.findByName(name);
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("category/{categoryId}")
+  public ResponseEntity<List<ProductResponse>> findByCategoryId(@PathVariable UUID categoryId) {
+    List<ProductResponse> response = productService.findByCategoryId(categoryId);
+    return ResponseEntity.ok(response);
+  }
+  
+  @GetMapping("supplier/{supplierId}")
+  public ResponseEntity<List<ProductResponse>> findBySupplierId(@PathVariable UUID supplierId) {
+    List<ProductResponse> response = productService.findBySupplierId(supplierId);
     return ResponseEntity.ok(response);
   }
 }
