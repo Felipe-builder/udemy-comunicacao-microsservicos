@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.cursoudemy.productapi.exceptions.ExceptionDatails;
 import br.com.cursoudemy.productapi.exceptions.NotFoundException;
+import br.com.cursoudemy.productapi.exceptions.ValidationException;
 
 @ControllerAdvice
 public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
@@ -69,6 +70,13 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
     ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 404, ex.getMessage(),
         request.getDescription(false));
     return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(ValidationException.class)
+  public final ResponseEntity<ExceptionDatails> handleValidationExceptions(Exception ex, WebRequest request) {
+    ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 400, ex.getMessage(),
+        request.getDescription(false));
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)

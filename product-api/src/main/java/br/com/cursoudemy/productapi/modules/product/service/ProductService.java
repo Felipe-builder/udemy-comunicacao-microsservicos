@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import br.com.cursoudemy.productapi.config.handlers.SuccessResponse;
 import br.com.cursoudemy.productapi.exceptions.NotFoundException;
 import br.com.cursoudemy.productapi.modules.category.model.Category;
 import br.com.cursoudemy.productapi.modules.category.service.CategoryService;
@@ -16,6 +19,8 @@ import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
 import br.com.cursoudemy.productapi.modules.product.repository.ProductRepository;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import br.com.cursoudemy.productapi.modules.supplier.service.SupplierService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService {
@@ -26,11 +31,18 @@ public class ProductService {
   @Autowired
   private ProductRepository productRepository;
 
+  @Lazy
   @Autowired
   private CategoryService categoryService;
 
+  @Lazy
   @Autowired
   private SupplierService supplierService;
+
+  @Cacheable(value = "products", key = "#id")
+  public boolean isSupplierExists(UUID id) {
+    return productRepository.existsById(id);
+  }
 
   public ProductResponse create(ProductRequest dto) {
     Category category = categoryService.findById(dto.getCategoryId());
@@ -38,6 +50,23 @@ public class ProductService {
 
     return productMapper.toDto(productRepository.save(productMapper.toEntity(dto, category, supplier)));
   }
+
+  @Transactional
+  public ProductResponse update(ProductRequest request, UUID id) {
+    if (!isSupplierExists(id)) {
+      throw new EntityNotFoundException("Category not found");
+    }
+    Category category = categoryService.findById(request.getCategoryId());
+    Supplier supplier = supplierService.findById(request.getSupplierId());
+
+    Product toUpdate = productMapper.toEntity(request, category, supplier);
+    toUpdate.setId(id);
+
+    Product updatedProduct = productRepository.save(toUpdate);
+
+    return productMapper.toDto(updatedProduct);
+  }
+
 
   public List<ProductResponse> findAll() {
     return productMapper.toDto(productRepository.findAll());
@@ -63,10 +92,6 @@ public class ProductService {
     return productMapper.toDto(listEntites);
   }
 
-  
-  // List<Product> findByCategoryId(UUID id);
-  // List<Product> findBySupplierId(UUID id);
-
   public List<ProductResponse> findByCategoryId(UUID id) {
     List<Product> listEntites = productRepository
         .findByCategoryId(id);
@@ -79,4 +104,20 @@ public class ProductService {
     return productMapper.toDto(listEntites);
   }
 
+  public Boolean existsByCategoryId(UUID id) {
+    return productRepository.existsByCategoryId(id);
+  }
+
+  public Boolean existsBySupplierId(UUID id) {
+    return productRepository.existsBySupplierId(id);
+  }
+
+  public SuccessResponse delete(UUID id) {
+    if (id == null) {
+      throw new IllegalArgumentException("ID is required");
+    }
+
+    productRepository.deleteById(id);
+    return SuccessResponse.create("The product was deleted.");
+  }
 }

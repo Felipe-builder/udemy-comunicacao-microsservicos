@@ -5,13 +5,17 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.cursoudemy.productapi.config.handlers.SuccessResponse;
+import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryRequest;
 import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
@@ -26,8 +30,8 @@ public class ProductControler {
   private ProductService productService;
 
   @PostMapping()
-  public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest dto) {
-    ProductResponse response = productService.create(dto);
+  public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest request) {
+    ProductResponse response = productService.create(request);
     return ResponseEntity.created(null).body(response);
   }
 
@@ -60,5 +64,15 @@ public class ProductControler {
   public ResponseEntity<List<ProductResponse>> findBySupplierId(@PathVariable UUID supplierId) {
     List<ProductResponse> response = productService.findBySupplierId(supplierId);
     return ResponseEntity.ok(response);
+  }
+
+  @PutMapping("{id}")
+  public ResponseEntity<ProductResponse> update(@Valid @RequestBody ProductRequest request, @PathVariable UUID id) {
+    return ResponseEntity.ok(productService.update(request, id));
+  }
+
+  @DeleteMapping("{id}")
+  public ResponseEntity<SuccessResponse> delete(@PathVariable UUID id) {
+    return ResponseEntity.ok(productService.delete(id));
   }
 }
