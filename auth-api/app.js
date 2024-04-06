@@ -2,6 +2,7 @@ import express from "express";
 
 import * as db from './src/config/db/initialData.js';
 import userRoutes from './src/modules/user/routes/UserRoutes.js';
+import ExceptionHandler from "./src/config/middleware/ExceptionHandler.js";
 
 
 const app = express();
@@ -22,6 +23,8 @@ app.get('/api/status', (req, res) => {
 })
 
 app.use(userRoutes);
+
+app.use(ExceptionHandler)
 
 app.listen(PORT, () => {
   console.info(`Server started successfully at port ${PORT}`)

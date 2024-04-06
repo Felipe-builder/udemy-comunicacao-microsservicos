@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken';
 import UserRepository from '../repository/UserRepository.js'
 import * as httpStatus from '../../../config/constants/httpStatus.js'
 
-import * as secrets  from '../../../config/constants/secrets.js'
+import { configs }  from '../../../config/constants/configs.js'
 
-import CustomException from '../exceptions/CustomException.js';
+import CustomException from '../../../config/exceptions/CustomException.js';
 
 class UserService {
   async findById(id) {
@@ -24,10 +24,7 @@ class UserService {
       }
     } catch (error) {
       console.error(error.message);
-      return {
-        status: error.status ? error.status : httpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      throw error
     }
   }
 
@@ -48,10 +45,7 @@ class UserService {
       }
     } catch (error) {
       console.error(error.message);
-      return {
-        status: error.status ? error.status : httpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      throw error
     }
   }
 
@@ -78,10 +72,7 @@ class UserService {
       }
     } catch (error) {
       console.error(error.message);
-      return {
-        status: error.status ? error.status : httpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      throw error
     }
   }
 
@@ -97,17 +88,14 @@ class UserService {
         name: user.name,
         email: user.email,
       }
-      const accessToken = jwt.sign({ authUser }, secrets.API_SECRET, {expiresIn: '1d'})
+      const accessToken = jwt.sign({ authUser }, configs.API_SECRET, {expiresIn: '1d'})
       return {
         status: httpStatus.SUCCESS,
         accessToken,
       }
     } catch (error) {
       console.error(error.message);
-      return {
-        status: error.status ? error.status : httpStatus.INTERNAL_SERVER_ERROR,
-        message: error.message
-      };
+      throw error;
     }
   }
 

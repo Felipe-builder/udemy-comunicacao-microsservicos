@@ -7,7 +7,7 @@ class UserRepository {
       return await User.create(user);
     } catch (error) {
       console.error(error.message);
-      return error;
+      throw error;
     }
   }
 
