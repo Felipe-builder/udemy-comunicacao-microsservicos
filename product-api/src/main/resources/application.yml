@@ -22,3 +22,7 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQL12Dialect
     show_sql: true
     open-in-view: false
+
+app-config:
+  secrets:
+    api-secret: ${API_SECRET:YXV0aC1hcGktc2VjcmV0LWRldi0xMjM0NTY=}

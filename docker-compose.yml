@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 
 services:
   auth-db:
@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: 123456
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
+      - auth-pg-volume:/var/lib/postgresql/data
     restart: always
 
   product-db:
@@ -26,10 +26,8 @@ services:
       POSTGRES_PASSWORD: 123456
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
+      - product-pg-volume:/var/lib/postgresql/data
     restart: always
-
-
 
   sales-db:
     container_name: sales-db
@@ -38,7 +36,7 @@ services:
       - "27017:27017"
       - "28017:28017"
     volumes:
-      - mongodb-volume:/data/db
+      - sales-mongodb-volume:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: 123456
@@ -52,10 +50,14 @@ services:
       - "25672:25672"
       - "15672:15672"
     volumes:
-      - ./datas/sales_rabbit:/data/db
+      - sales-rabbit-volume:/data/db
     restart: always
 
 volumes:
-  postgres-volume:
+  product-pg-volume:
 
-  mongodb-volume:
+  auth-pg-volume:
+
+  sales-mongodb-volume:
+
+  sales-rabbit-volume:

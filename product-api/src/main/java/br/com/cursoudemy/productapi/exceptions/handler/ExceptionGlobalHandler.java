@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.com.cursoudemy.productapi.exceptions.AuthenticationException;
 import br.com.cursoudemy.productapi.exceptions.ExceptionDatails;
 import br.com.cursoudemy.productapi.exceptions.NotFoundException;
 import br.com.cursoudemy.productapi.exceptions.ValidationException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 
 @ControllerAdvice
 public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
@@ -79,12 +82,28 @@ public class ExceptionGlobalHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(AuthenticationException.class)
+  public final ResponseEntity<ExceptionDatails> handleAuthenticationExceptions(Exception ex, WebRequest request) {
+    ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 401, ex.getMessage(),
+        request.getDescription(false));
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+  }
+
   @ExceptionHandler(DataIntegrityViolationException.class)
-  public final ResponseEntity<ExceptionDatails> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+  public final ResponseEntity<ExceptionDatails> handleDataIntegrityViolationExceptions(DataIntegrityViolationException ex,
    WebRequest request) {
     String errorMessage = "Data integrity error: " + ex.getMostSpecificCause().getMessage();
     ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), 400, errorMessage,
         request.getDescription(false));
     return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler({MalformedJwtException.class, SignatureException.class})
+  public final ResponseEntity<ExceptionDatails> handleJwtExceptions(Exception ex,
+     WebRequest request) {
+      String errorMessage = "Error while trying to proccess the Access Token.";
+      ExceptionDatails exceptionResponse = new ExceptionDatails(new Date(), HttpStatus.UNAUTHORIZED.value(), errorMessage,
+          request.getDescription(false));
+      return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
   }
 }
