@@ -1,7 +1,6 @@
 package br.com.cursoudemy.productapi.modules.category.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +39,7 @@ public class CategoryController {
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<CategoryResponse> findById(@PathVariable UUID id) {
+  public ResponseEntity<CategoryResponse> findById(@PathVariable Long id) {
     CategoryResponse response = categoryService.findByIdResponse(id);
     return ResponseEntity.ok(response);
   }
@@ -52,12 +51,12 @@ public class CategoryController {
   }
 
   @PutMapping("{id}")
-  public ResponseEntity<CategoryResponse> update(@Valid @RequestBody CategoryRequest request, @PathVariable UUID id) {
+  public ResponseEntity<CategoryResponse> update(@Valid @RequestBody CategoryRequest request, @PathVariable Long id) {
     return ResponseEntity.ok(categoryService.update(request, id));
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<SuccessResponse> delete(@PathVariable UUID id) {
+  public ResponseEntity<SuccessResponse> delete(@PathVariable Long id) {
     return ResponseEntity.ok(categoryService.delete(id));
   }
 

@@ -14,8 +14,8 @@ import jakarta.persistence.Table;
 public class Supplier {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
   
   @Column(name = "name", nullable = false, unique = true)
   private String name;
@@ -27,15 +27,15 @@ public class Supplier {
     this.name = name;
   }
 
-  public Supplier(UUID id, String name) {
+  public Supplier(Long id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public UUID getId() {
+  public Long getId() {
     return id;
   }
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
   public String getName() {

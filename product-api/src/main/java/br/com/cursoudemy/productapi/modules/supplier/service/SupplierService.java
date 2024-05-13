@@ -32,7 +32,7 @@ public class SupplierService {
   private ProductService productService;
 
   @Cacheable(value = "suppliers", key = "#id")
-  public boolean isSupplierExists(UUID id) {
+  public boolean isSupplierExists(Long id) {
     return supplierRepository.existsById(id);
   }
 
@@ -42,7 +42,7 @@ public class SupplierService {
   }
 
   @Transactional
-  public SupplierResponse update(SupplierRequest request, UUID id) {
+  public SupplierResponse update(SupplierRequest request, Long id) {
     if (!isSupplierExists(id)) {
       throw new EntityNotFoundException("Fornecedor não encontrado");
     }
@@ -58,14 +58,14 @@ public class SupplierService {
     return supplierMapper.toDto(supplierRepository.findAll());
   }
 
-  public Supplier findById(UUID supplierId) {
+  public Supplier findById(Long supplierId) {
     return supplierRepository
         .findById(supplierId)
         .orElseThrow(() -> new NotFoundException("There's no supplier for the given ID."));
 
   }
 
-  public SupplierResponse findByIdResponse(UUID supplierId) {
+  public SupplierResponse findByIdResponse(Long supplierId) {
     Supplier entity = supplierRepository
         .findById(supplierId)
         .orElseThrow(() -> new NotFoundException("There's no supplier for the given ID."));
@@ -78,7 +78,7 @@ public class SupplierService {
     return supplierMapper.toDto(listEntites);
   }
 
-  public SuccessResponse delete(UUID id) {
+  public SuccessResponse delete(Long id) {
     if (id == null) {
       throw new IllegalArgumentException("ID is required");
     }

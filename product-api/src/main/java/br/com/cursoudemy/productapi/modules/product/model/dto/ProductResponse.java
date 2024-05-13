@@ -14,7 +14,7 @@ import java.util.Objects;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductResponse {
 
-  private UUID id;
+  private Long id;
 
   private String name;
 
@@ -33,7 +33,7 @@ public class ProductResponse {
   public ProductResponse() {
   }
 
-  public ProductResponse(UUID id, String name, Integer quantityAvailable, Category category, Supplier supplier,
+  public ProductResponse(Long id, String name, Integer quantityAvailable, Category category, Supplier supplier,
       LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.id = id;
     this.name = name;
@@ -44,11 +44,11 @@ public class ProductResponse {
     this.updatedAt = updatedAt;
   }
 
-  public UUID getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

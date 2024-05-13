@@ -1,7 +1,6 @@
 package br.com.cursoudemy.productapi.modules.category.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,7 +31,7 @@ public class CategoryService {
   private ProductService productService;
 
   @Cacheable(value = "categories", key = "#id")
-  public boolean isSupplierExists(UUID id) {
+  public boolean isSupplierExists(Long id) {
     return categoryRepository.existsById(id);
   }
 
@@ -42,7 +41,7 @@ public class CategoryService {
   }
 
   @Transactional
-  public CategoryResponse update(CategoryRequest request, UUID id) {
+  public CategoryResponse update(CategoryRequest request, Long id) {
     if (!isSupplierExists(id)) {
       throw new EntityNotFoundException("Category not found");
     }
@@ -59,13 +58,13 @@ public class CategoryService {
     return categoryMapper.toDto(categories);
   }
 
-  public Category findById(UUID categoryId) {
+  public Category findById(Long categoryId) {
     return categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> new NotFoundException("There's no category for the given ID."));
   }
 
-  public CategoryResponse findByIdResponse(UUID categoryId) {
+  public CategoryResponse findByIdResponse(Long categoryId) {
     Category entity = categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> new NotFoundException("There's no category for the given ID."));
@@ -78,7 +77,7 @@ public class CategoryService {
     return categoryMapper.toDto(listEntites);
   }
 
-  public SuccessResponse delete(UUID id) {
+  public SuccessResponse delete(Long id) {
     if (id == null) {
       throw new IllegalArgumentException("ID is required");
     }

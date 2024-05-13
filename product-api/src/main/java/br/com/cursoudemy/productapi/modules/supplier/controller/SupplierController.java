@@ -1,7 +1,6 @@
 package br.com.cursoudemy.productapi.modules.supplier.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +41,7 @@ public class SupplierController {
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<SupplierResponse> findById(@PathVariable UUID id) {
+  public ResponseEntity<SupplierResponse> findById(@PathVariable Long id) {
     SupplierResponse response = supplierService.findByIdResponse(id);
     return ResponseEntity.ok(response);
   }
@@ -54,12 +53,12 @@ public class SupplierController {
   }
 
   @PutMapping("{id}")
-  public ResponseEntity<SupplierResponse> update(@Valid @RequestBody SupplierRequest request, @PathVariable UUID id) {
+  public ResponseEntity<SupplierResponse> update(@Valid @RequestBody SupplierRequest request, @PathVariable Long id) {
     return ResponseEntity.ok(supplierService.update(request, id));
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<SuccessResponse> delete(@PathVariable UUID id) {
+  public ResponseEntity<SuccessResponse> delete(@PathVariable Long id) {
     return ResponseEntity.ok(supplierService.delete(id));
   }
 }

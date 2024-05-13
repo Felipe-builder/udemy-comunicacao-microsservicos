@@ -1,29 +1,28 @@
 package br.com.cursoudemy.productapi.modules.category.model.dto;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CategoryResponse {
-  private UUID id;  
+  private Long id;  
   private String description;
 
   public CategoryResponse() {
   }
 
-  public CategoryResponse(UUID id, String description) {
+  public CategoryResponse(Long id, String description) {
     this.id = id;
     this.description = description;
   }
 
-  public UUID getId() {
+  public Long getId() {
     return this.id;
   }
 
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -35,7 +34,7 @@ public class CategoryResponse {
     this.description = description;
   }
 
-  public CategoryResponse id(UUID id) {
+  public CategoryResponse id(Long id) {
     setId(id);
     return this;
   }

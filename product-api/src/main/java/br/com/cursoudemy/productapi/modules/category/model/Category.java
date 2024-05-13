@@ -1,6 +1,5 @@
 package br.com.cursoudemy.productapi.modules.category.model;
 
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +13,8 @@ import jakarta.persistence.Table;
 public class Category {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @Column(name = "description", nullable = false, unique = true)
   private String description;
@@ -27,16 +26,16 @@ public class Category {
     this.description = description;
   }
 
-  public Category(UUID id, String description) {
+  public Category(Long id, String description) {
     this.id = id;
     this.description = description;
   }
 
-  public UUID getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

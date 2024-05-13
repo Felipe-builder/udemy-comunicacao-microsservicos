@@ -22,8 +22,8 @@ import jakarta.persistence.Table;
 public class Product {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UUID id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   @Column(name = "name", nullable = false, unique = true)
   private String name;
@@ -57,7 +57,7 @@ public class Product {
     this.supplier = supplier;
   }
 
-  public Product(UUID id, String name, Integer quantityAvailable, Category category, Supplier supplier) {
+  public Product(Long id, String name, Integer quantityAvailable, Category category, Supplier supplier) {
     this.id = id;
     this.name = name;
     this.quantityAvailable = quantityAvailable;
@@ -65,11 +65,11 @@ public class Product {
     this.supplier = supplier;
   }
 
-  public UUID getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

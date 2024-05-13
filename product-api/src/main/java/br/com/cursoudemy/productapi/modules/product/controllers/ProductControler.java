@@ -1,7 +1,6 @@
 package br.com.cursoudemy.productapi.modules.product.controllers;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +41,7 @@ public class ProductControler {
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<ProductResponse> findById(@PathVariable UUID id) {
+  public ResponseEntity<ProductResponse> findById(@PathVariable Long id) {
     ProductResponse response = productService.findByIdResponse(id);
     return ResponseEntity.ok(response);
   }
@@ -55,24 +54,24 @@ public class ProductControler {
   }
 
   @GetMapping("category/{categoryId}")
-  public ResponseEntity<List<ProductResponse>> findByCategoryId(@PathVariable UUID categoryId) {
+  public ResponseEntity<List<ProductResponse>> findByCategoryId(@PathVariable Long categoryId) {
     List<ProductResponse> response = productService.findByCategoryId(categoryId);
     return ResponseEntity.ok(response);
   }
   
   @GetMapping("supplier/{supplierId}")
-  public ResponseEntity<List<ProductResponse>> findBySupplierId(@PathVariable UUID supplierId) {
+  public ResponseEntity<List<ProductResponse>> findBySupplierId(@PathVariable Long supplierId) {
     List<ProductResponse> response = productService.findBySupplierId(supplierId);
     return ResponseEntity.ok(response);
   }
 
   @PutMapping("{id}")
-  public ResponseEntity<ProductResponse> update(@Valid @RequestBody ProductRequest request, @PathVariable UUID id) {
+  public ResponseEntity<ProductResponse> update(@Valid @RequestBody ProductRequest request, @PathVariable Long id) {
     return ResponseEntity.ok(productService.update(request, id));
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<SuccessResponse> delete(@PathVariable UUID id) {
+  public ResponseEntity<SuccessResponse> delete(@PathVariable Long id) {
     return ResponseEntity.ok(productService.delete(id));
   }
 }

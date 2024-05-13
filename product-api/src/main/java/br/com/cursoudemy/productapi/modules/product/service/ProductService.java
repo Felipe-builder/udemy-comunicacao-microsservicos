@@ -16,6 +16,7 @@ import br.com.cursoudemy.productapi.modules.product.mapper.ProductMapper;
 import br.com.cursoudemy.productapi.modules.product.model.Product;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
+import br.com.cursoudemy.productapi.modules.product.model.dto.ProductStockDTO;
 import br.com.cursoudemy.productapi.modules.product.repository.ProductRepository;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import br.com.cursoudemy.productapi.modules.supplier.service.SupplierService;
@@ -40,7 +41,7 @@ public class ProductService {
   private SupplierService supplierService;
 
   @Cacheable(value = "products", key = "#id")
-  public boolean isSupplierExists(UUID id) {
+  public boolean isSupplierExists(Long id) {
     return productRepository.existsById(id);
   }
 
@@ -52,7 +53,7 @@ public class ProductService {
   }
 
   @Transactional
-  public ProductResponse update(ProductRequest request, UUID id) {
+  public ProductResponse update(ProductRequest request, Long id) {
     if (!isSupplierExists(id)) {
       throw new EntityNotFoundException("Category not found");
     }
@@ -72,14 +73,14 @@ public class ProductService {
     return productMapper.toDto(productRepository.findAll());
   }
 
-  public Product findById(UUID id) {
+  public Product findById(Long id) {
     return productRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("There's no product for the given ID."));
 
   }
 
-  public ProductResponse findByIdResponse(UUID id) {
+  public ProductResponse findByIdResponse(Long id) {
     Product entity = productRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("There's no product for the given ID."));
@@ -92,27 +93,27 @@ public class ProductService {
     return productMapper.toDto(listEntites);
   }
 
-  public List<ProductResponse> findByCategoryId(UUID id) {
+  public List<ProductResponse> findByCategoryId(Long id) {
     List<Product> listEntites = productRepository
         .findByCategoryId(id);
     return productMapper.toDto(listEntites);
   }
 
-  public List<ProductResponse> findBySupplierId(UUID id) {
+  public List<ProductResponse> findBySupplierId(Long id) {
     List<Product> listEntites = productRepository
         .findBySupplierId(id);
     return productMapper.toDto(listEntites);
   }
 
-  public Boolean existsByCategoryId(UUID id) {
+  public Boolean existsByCategoryId(Long id) {
     return productRepository.existsByCategoryId(id);
   }
 
-  public Boolean existsBySupplierId(UUID id) {
+  public Boolean existsBySupplierId(Long id) {
     return productRepository.existsBySupplierId(id);
   }
 
-  public SuccessResponse delete(UUID id) {
+  public SuccessResponse delete(Long id) {
     if (id == null) {
       throw new IllegalArgumentException("ID is required");
     }
@@ -120,4 +121,7 @@ public class ProductService {
     productRepository.deleteById(id);
     return SuccessResponse.create("The product was deleted.");
   }
+
+  public void updateProductStock(ProductStockDTO productStockDTO) {}
+
 }

@@ -1,6 +1,5 @@
 package br.com.cursoudemy.productapi.modules.supplier.model.dto;
 
-import java.util.UUID;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,22 +8,22 @@ import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SupplierResponse {
-  private UUID id;
+  private Long id;
   private String name;
 
   public SupplierResponse() {
   }
 
-  public SupplierResponse(UUID id, String name) {
+  public SupplierResponse(Long id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public UUID getId() {
+  public Long getId() {
     return this.id;
   }
 
-  public void setId(UUID id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

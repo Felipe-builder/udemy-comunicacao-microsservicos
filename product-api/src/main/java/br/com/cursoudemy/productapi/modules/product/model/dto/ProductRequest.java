@@ -1,7 +1,5 @@
 package br.com.cursoudemy.productapi.modules.product.model.dto;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -23,15 +21,15 @@ public class ProductRequest {
   private Integer quantityAvailable;
 
   @NotNull(message = "category_id cannot be null")
-  private UUID categoryId;
+  private Long categoryId;
   
   @NotNull(message = "supplier_id cannot be null")
-  private UUID supplierId;
+  private Long supplierId;
 
   public ProductRequest() {
   }
 
-  public ProductRequest( String name, Integer quantityAvailable, UUID categoryId, UUID supplierId) {
+  public ProductRequest( String name, Integer quantityAvailable, Long categoryId, Long supplierId) {
     this.name = name;
     this.quantityAvailable = quantityAvailable;
     this.categoryId = categoryId;
@@ -57,19 +55,19 @@ public class ProductRequest {
     this.quantityAvailable = quantityAvailable;
   }
 
-  public UUID getCategoryId() {
+  public Long getCategoryId() {
     return categoryId;
   }
 
-  public void setCategoryId(UUID categoryId) {
+  public void setCategoryId(Long categoryId) {
     this.categoryId = categoryId;
   }
 
-  public UUID getSupplierId() {
+  public Long getSupplierId() {
     return supplierId;
   }
 
-  public void setSupplierId(UUID supplierId) {
+  public void setSupplierId(Long supplierId) {
     this.supplierId = supplierId;
   }
 
