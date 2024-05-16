@@ -50,7 +50,7 @@ public class Product {
   public Product() {
   }
 
-  public Product( String name, Integer quantityAvailable, Category category, Supplier supplier) {
+  public Product(String name, Integer quantityAvailable, Category category, Supplier supplier) {
     this.name = name;
     this.quantityAvailable = quantityAvailable;
     this.category = category;
@@ -166,6 +166,10 @@ public class Product {
   public String toString() {
     return "Product [id=" + id + ", name=" + name + ", quantityAvailable=" + quantityAvailable + ", category="
         + category + ", supplier=" + supplier + "]";
+  }
+
+  public void updateStock(Integer quantity) {
+    quantityAvailable = quantityAvailable - quantity;
   }
 
 }
