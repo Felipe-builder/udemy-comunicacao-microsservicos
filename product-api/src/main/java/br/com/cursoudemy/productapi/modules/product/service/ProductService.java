@@ -22,9 +22,11 @@ import br.com.cursoudemy.productapi.modules.product.model.Product;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductQuantityDTO;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
+import br.com.cursoudemy.productapi.modules.product.model.dto.ProductSalesResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductStockDTO;
 import br.com.cursoudemy.productapi.modules.product.rabbitmq.ProductStockListener;
 import br.com.cursoudemy.productapi.modules.product.repository.ProductRepository;
+import br.com.cursoudemy.productapi.modules.sales.client.SalesClient;
 import br.com.cursoudemy.productapi.modules.sales.dto.SalesConfirmationDTO;
 import br.com.cursoudemy.productapi.modules.sales.enums.SalesStatus;
 import br.com.cursoudemy.productapi.modules.sales.rabbitmq.SalesConfirmationSender;
@@ -55,6 +57,9 @@ public class ProductService {
   @Autowired
   private SalesConfirmationSender salesConfirmationSender;
 
+  @Autowired
+  private SalesClient salesClient;
+
   @Cacheable(value = "products", key = "#id")
   public boolean isSupplierExists(Long id) {
     return productRepository.existsById(id);
@@ -64,7 +69,7 @@ public class ProductService {
     Category category = categoryService.findById(dto.getCategoryId());
     Supplier supplier = supplierService.findById(dto.getSupplierId());
 
-    return productMapper.toDto(productRepository.save(productMapper.toEntity(dto, category, supplier)));
+    return productMapper.toResponse(productRepository.save(productMapper.toEntity(dto, category, supplier)));
   }
 
   @Transactional
@@ -80,11 +85,11 @@ public class ProductService {
 
     Product updatedProduct = productRepository.save(toUpdate);
 
-    return productMapper.toDto(updatedProduct);
+    return productMapper.toResponse(updatedProduct);
   }
 
   public List<ProductResponse> findAll() {
-    return productMapper.toDto(productRepository.findAll());
+    return productMapper.toResponse(productRepository.findAll());
   }
 
   public Product findById(Long id) {
@@ -98,25 +103,25 @@ public class ProductService {
     Product entity = productRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("There's no product for the given ID."));
-    return productMapper.toDto(entity);
+    return productMapper.toResponse(entity);
   }
 
   public List<ProductResponse> findByName(String name) {
     List<Product> listEntites = productRepository
         .findByNameIgnoreCaseContaining(name);
-    return productMapper.toDto(listEntites);
+    return productMapper.toResponse(listEntites);
   }
 
   public List<ProductResponse> findByCategoryId(Long id) {
     List<Product> listEntites = productRepository
         .findByCategoryId(id);
-    return productMapper.toDto(listEntites);
+    return productMapper.toResponse(listEntites);
   }
 
   public List<ProductResponse> findBySupplierId(Long id) {
     List<Product> listEntites = productRepository
         .findBySupplierId(id);
-    return productMapper.toDto(listEntites);
+    return productMapper.toResponse(listEntites);
   }
 
   public Boolean existsByCategoryId(Long id) {
@@ -148,18 +153,29 @@ public class ProductService {
     }
   }
 
+  public ProductSalesResponse findProductsSales(Long id) {
+    var product = findById(id);
+    try {
+      var sales = salesClient.findSalesByProductId(product.getId())
+          .orElseThrow(() -> new ValidationException("The sales was not found by this product"));
+      return productMapper.toProductSalesResponse(product, sales.getSalesIds());
+    } catch (Exception e) {
+      throw new ValidationException("There was an error trying to get the product's sales.");
+    }
+  }
+
   private void updateStock(ProductStockDTO productStockDTO) {
     var productsForUpdate = new ArrayList<Product>();
 
     productStockDTO
-    .getProducts()
-    .forEach(salesProduct -> {
-      Product existingProduct = findById(salesProduct.getProductId());
-      validateQuantyInStock(salesProduct, existingProduct);
-      existingProduct.updateStock(salesProduct.getQuantity());
-      productsForUpdate.add(existingProduct);
-    });
-    if(!isEmpty(productsForUpdate)) {
+        .getProducts()
+        .forEach(salesProduct -> {
+          Product existingProduct = findById(salesProduct.getProductId());
+          validateQuantyInStock(salesProduct, existingProduct);
+          existingProduct.updateStock(salesProduct.getQuantity());
+          productsForUpdate.add(existingProduct);
+        });
+    if (!isEmpty(productsForUpdate)) {
       productRepository.saveAll(productsForUpdate);
       SalesConfirmationDTO approvedMessage = new SalesConfirmationDTO(productStockDTO.getSalesId(),
           SalesStatus.APPROVED);

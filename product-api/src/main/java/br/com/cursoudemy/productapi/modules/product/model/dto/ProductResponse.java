@@ -8,7 +8,10 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import br.com.cursoudemy.productapi.modules.category.model.Category;
+import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
+import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierResponse;
+
 import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -20,9 +23,9 @@ public class ProductResponse {
 
   private Integer quantityAvailable;
 
-  private Category category;
-
-  private Supplier supplier;
+  private SupplierResponse supplier;
+  
+  private CategoryResponse category;
 
   @JsonProperty("created_at")
   private LocalDateTime createdAt;
@@ -33,7 +36,7 @@ public class ProductResponse {
   public ProductResponse() {
   }
 
-  public ProductResponse(Long id, String name, Integer quantityAvailable, Category category, Supplier supplier,
+  public ProductResponse(Long id, String name, Integer quantityAvailable, CategoryResponse category, SupplierResponse supplier,
       LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.id = id;
     this.name = name;
@@ -68,19 +71,19 @@ public class ProductResponse {
     this.quantityAvailable = quantityAvailable;
   }
 
-  public Category getCategory() {
+  public CategoryResponse getCategory() {
     return category;
   }
 
-  public void setCategory(Category category) {
+  public void setCategory(CategoryResponse category) {
     this.category = category;
   }
 
-  public Supplier getSupplier() {
+  public SupplierResponse getSupplier() {
     return supplier;
   }
 
-  public void setSupplier(Supplier supplier) {
+  public void setSupplier(SupplierResponse supplier) {
     this.supplier = supplier;
   }
 

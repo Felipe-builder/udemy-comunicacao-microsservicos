@@ -18,6 +18,7 @@ import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryRequest;
 import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
+import br.com.cursoudemy.productapi.modules.product.model.dto.ProductSalesResponse;
 import br.com.cursoudemy.productapi.modules.product.service.ProductService;
 import jakarta.validation.Valid;
 
@@ -73,5 +74,11 @@ public class ProductControler {
   @DeleteMapping("{id}")
   public ResponseEntity<SuccessResponse> delete(@PathVariable Long id) {
     return ResponseEntity.ok(productService.delete(id));
+  }
+
+  @GetMapping("{productId}/sales")
+  public ResponseEntity<ProductSalesResponse> findProductSales(@PathVariable Long id) {
+    ProductSalesResponse response = productService.findProductsSales(id);
+    return ResponseEntity.ok(response);
   }
 }
