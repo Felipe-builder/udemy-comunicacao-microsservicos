@@ -19,6 +19,7 @@ import br.com.cursoudemy.productapi.modules.category.model.Category;
 import br.com.cursoudemy.productapi.modules.category.service.CategoryService;
 import br.com.cursoudemy.productapi.modules.product.mapper.ProductMapper;
 import br.com.cursoudemy.productapi.modules.product.model.Product;
+import br.com.cursoudemy.productapi.modules.product.model.dto.ProductCheckStockRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductQuantityDTO;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
@@ -75,7 +76,7 @@ public class ProductService {
   @Transactional
   public ProductResponse update(ProductRequest request, Long id) {
     if (!isSupplierExists(id)) {
-      throw new EntityNotFoundException("Category not found");
+      throw new EntityNotFoundException("Product not found");
     }
     Category category = categoryService.findById(request.getCategoryId());
     Supplier supplier = supplierService.findById(request.getSupplierId());
@@ -164,6 +165,27 @@ public class ProductService {
     }
   }
 
+  public SuccessResponse checkProductStock(ProductCheckStockRequest request) {
+    if (isEmpty(request) || isEmpty(request.getProducts()) ) {
+      throw new ValidationException("The request data and products must be informed");
+    }
+
+    request
+      .getProducts()
+      .forEach(this::validateStock);
+    return SuccessResponse.create("The stock is ok!");
+  }
+
+  private void validateStock(ProductQuantityDTO productQuantityDTO) {
+    if (isEmpty(productQuantityDTO.getProductId()) || isEmpty(productQuantityDTO.getQuantity())) {
+      throw new ValidationException("Product ID and quantity must be informed.");
+    }
+    var product = findById(productQuantityDTO.getProductId());
+    if (productQuantityDTO.getQuantity() > product.getQuantityAvailable()) {
+      throw new ValidationException(String.format("The product %s is out of stock.", product.getId()));
+    }
+  }
+
   private void updateStock(ProductStockDTO productStockDTO) {
     var productsForUpdate = new ArrayList<Product>();
 
@@ -211,4 +233,6 @@ public class ProductService {
       throw new ValidationException("The product id is out of stock.\n" + existingProduct.getId());
     }
   }
+
+  
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.cursoudemy.productapi.config.handlers.SuccessResponse;
 import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryRequest;
 import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
+import br.com.cursoudemy.productapi.modules.product.model.dto.ProductCheckStockRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductSalesResponse;
@@ -24,7 +25,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/product")
-public class ProductControler {
+public class ProductController {
 
   @Autowired
   private ProductService productService;
@@ -76,7 +77,12 @@ public class ProductControler {
     return ResponseEntity.ok(productService.delete(id));
   }
 
-  @GetMapping("{productId}/sales")
+  @PostMapping("check-stock")
+  public ResponseEntity<SuccessResponse> checkProductStock(@RequestBody ProductCheckStockRequest request) {
+    return ResponseEntity.ok(productService.checkProductStock(request));
+  }
+
+  @GetMapping("{id}/sales")
   public ResponseEntity<ProductSalesResponse> findProductSales(@PathVariable Long id) {
     ProductSalesResponse response = productService.findProductsSales(id);
     return ResponseEntity.ok(response);
