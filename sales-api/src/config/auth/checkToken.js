@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
 
-import { configs }  from '../secrets/secrets.js';
+import { configs }  from '../constants/secrets.js';
 import * as httpStatus from '../constants/httpStatus.js'
 
 import CustomException from '../exceptions/CustomException.js';

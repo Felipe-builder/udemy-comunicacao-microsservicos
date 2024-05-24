@@ -1,8 +1,8 @@
 import mongoose, { mongo } from 'mongoose';
 
-import { configs } from '../secrets/secrets.js';
+import { configs } from '../constants/secrets.js';
 
-export function connect() {
+export function connectMongoDb() {
     mongoose.connect(configs.MONGO_DB_URL);
 
     mongoose.connection.on('connected', function () {

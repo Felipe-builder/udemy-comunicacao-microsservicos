@@ -1,17 +1,17 @@
 import express from "express";
 
-import { connect } from "./src/config/db/mongoDbConfig.js";
+import { connectMongoDb } from "./src/config/db/mongoDbConfig.js";
 import Order from "./src/modules/order/model/Order.js";
 import orderRoutes from './src/modules/order/router/OrderRoutes.js';
 import ExceptionHandler from "./src/config/middleware/ExceptionHandler.js";
-
-
+import { connectRabbitMq } from './src/config/rabbitmq/rabbitConfig.js'
 
 const app = express();
 const env = process.env;
 const PORT = env.PORT || 8082;
 
-connect();
+connectMongoDb();
+connectRabbitMq()
 
 app.use(express.json())
 
