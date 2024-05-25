@@ -1,4 +1,7 @@
 import express from "express";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 import { connectMongoDb } from "./src/config/db/mongoDbConfig.js";
 import Order from "./src/modules/order/model/Order.js";
