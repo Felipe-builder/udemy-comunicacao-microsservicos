@@ -1,4 +1,5 @@
 import amqp from 'amqplib/callback_api.js';
+import { listenToSalesConfirmationQueue } from '../../modules/sales/rabbitmq/salesConfirmationListener.js';
 
 import {
     PRODUCT_STOCK_UPDATE_QUEUE,
@@ -40,7 +41,11 @@ async function connectRabbitMqAndCreateQueues() {
         setTimeout(function () {
             connection.close();
         }, HALF_SECOND);
+        
     });
+    setTimeout(function () {
+        listenToSalesConfirmationQueue();
+    }, HALF_SECOND)
 }
 
 async function createQueue(connection, queue, routingKey, topic) {
