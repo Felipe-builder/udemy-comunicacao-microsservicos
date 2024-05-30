@@ -7,7 +7,7 @@ import {
     PRODUCT_STOCK_UPDATE_ROUTING_KEY
 } from '../../../config/rabbitmq/queue.js'
 
-export function sendMessageTiProductStockUpdateQueue(message){
+export function sendMessageToProductStockUpdateQueue(message){
     amqp.connect(configs.RABBIT_MQ_URL, (error, connection) => {
         if (error) {
             throw error;

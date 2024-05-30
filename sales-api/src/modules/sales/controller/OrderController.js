@@ -1,4 +1,4 @@
-import { sendMessageTiProductStockUpdateQueue } from '../../products/rabbitmq/producktStockUpdateSender.js'
+import { sendMessageToProductStockUpdateQueue } from '../../products/rabbitmq/producktStockUpdateSender.js'
 class OrderController {
 
   async teste(req, res, next) {
@@ -17,7 +17,7 @@ class OrderController {
       }
     ]
     try {
-      sendMessageTiProductStockUpdateQueue(data);
+      sendMessageToProductStockUpdateQueue(data);
       return res.status(200).json({
         "message": "Teste feito com sucesso!",
         "data": data

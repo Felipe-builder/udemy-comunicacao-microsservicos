@@ -5,7 +5,7 @@ dotenv.config();
 
 import { connectMongoDb } from "./src/config/db/mongoDbConfig.js";
 import Order from "./src/modules/sales/model/Order.js";
-import orderRoutes from './src/modules/sales/router/OrderRoutes.js';
+import orderRoutes from './src/modules/sales/routes/OrderRoutes.js';
 import ExceptionHandler from "./src/config/middleware/ExceptionHandler.js";
 import { connectRabbitMq } from './src/config/rabbitmq/rabbitConfig.js'
 
