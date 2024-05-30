@@ -8,6 +8,7 @@ import * as httpStatus from '../../../config/constants/httpStatus.js'
 import { configs } from '../../../config/constants/secrets.js'
 
 import CustomException from '../../../config/exceptions/CustomException.js';
+import ProductClient from '../../products/client/ProductClient.js'
 
 class OrderService {
 
@@ -15,19 +16,14 @@ class OrderService {
     try {
       let orderData = req.body;
       this.validateOrderData(orderData);
+
       const { authUser } = req;
-      let order = {
-        status: PENDING,
-        user: authUser,
-        products: orderData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
+      const { authorization } = req.headers;
+      let order = this.createInitialOrderData(orderData, authUser)
 
-      await this.validateProductStock(order);
-
+      await this.validateProductStock(order, authorization);
       let createdOrder = await OrderRepository.create(order);
-      sendMessageToProductStockUpdateQueue(createdOrder.products);
+      this.sendMessage(createdOrder);
 
       return {
         status: httpStatus.SUCCESS,
@@ -42,10 +38,11 @@ class OrderService {
   async updatedOrder(orderMessage) {
     try {
       const order = JSON.parse(orderMessage);
-      if ( order.salesId && order.status) {
+      if (order.salesId && order.status) {
         let existingOrder = await OrderRepository.findById(order.salesId);
-        if ( existingOrder && order.status !== existingOrder.status) {
+        if (existingOrder && order.status !== existingOrder.status) {
           existingOrder.status = order.status;
+          existingOrder.updatedAt = new Date();
           await OrderRepository.create(existingOrder)
         }
       } else {
@@ -90,6 +87,24 @@ class OrderService {
     }
   }
 
+  createInitialOrderData(orderData, authUser) {
+    return {
+      status: PENDING,
+      user: authUser,
+      products: orderData,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+  }
+
+  sendMessage(createdOrder) {
+      const message = {
+        salesId: createdOrder.id,
+        products: createdOrder.products
+      }
+      sendMessageToProductStockUpdateQueue(message);
+  }
+
   validateOrderData(data) {
     if (!data || !data.products) {
       throw new CustomException(httpStatus.BAD_REQUEST, "The products must be informed")
@@ -102,8 +117,8 @@ class OrderService {
     }
   }
 
-  async validateProductStock(order) {
-    let stockIsOut = true;
+  async validateProductStock(order, token) {
+    let stockIsOut = await ProductClient.checkProductStock(order.products, token);
 
     if (stockIsOut) {
       throw new CustomException(httpStatus.BAD_REQUEST, 'The stock is out for the products')
