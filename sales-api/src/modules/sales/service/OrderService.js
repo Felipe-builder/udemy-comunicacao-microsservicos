@@ -1,6 +1,3 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
 import OrderRepository from '../repository/OrderRepository.js'
 
 import { sendMessageToProductStockUpdateQueue } from '../../products/rabbitmq/producktStockUpdateSender.js'
@@ -27,6 +24,8 @@ class OrderService {
         updatedAt: new Date(),
       }
 
+      await this.validateProductStock(order);
+
       let createdOrder = await OrderRepository.create(order);
       sendMessageToProductStockUpdateQueue(createdOrder.products);
 
@@ -39,6 +38,28 @@ class OrderService {
       throw error
     }
   }
+
+  async updatedOrder(orderMessage) {
+    try {
+      const order = JSON.parse(orderMessage);
+      if ( order.salesId && order.status) {
+        let existingOrder = await OrderRepository.findById(order.salesId);
+        if ( existingOrder && order.status !== existingOrder.status) {
+          existingOrder.status = order.status;
+          await OrderRepository.create(existingOrder)
+        }
+      } else {
+        console.warn('The order message was not complete.')
+      }
+      return {
+        status: httpStatus.SUCCESS,
+      }
+    } catch (error) {
+      console.error(error.message);
+      throw error
+    }
+  }
+
 
   async findById(id) {
     try {
@@ -76,8 +97,16 @@ class OrderService {
   }
 
   validateOrderNotfound(data) {
-    if (!data || !data.products) {
+    if (!data) {
       throw new CustomException(httpStatus.NOT_FOUND, "The Order was not found")
+    }
+  }
+
+  async validateProductStock(order) {
+    let stockIsOut = true;
+
+    if (stockIsOut) {
+      throw new CustomException(httpStatus.BAD_REQUEST, 'The stock is out for the products')
     }
   }
 }
