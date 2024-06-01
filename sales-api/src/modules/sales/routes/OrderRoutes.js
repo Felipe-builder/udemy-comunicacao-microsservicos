@@ -8,6 +8,8 @@ const router = new Router();
 router.use(checkToken);
 
 router.get('/api/teste', OrderController.teste);
+router.get('/api/order/:id', OrderController.findById);
+router.post('/api/order/create', OrderController.createOrder);
 
 
 export default router;

@@ -11,25 +11,15 @@ import {
 
 import { configs } from '../constants/secrets.js'
 
-const HALF_SECOND = 500;
-const HALF_MINUTE = 30000;
-const CONTAINER_ENV = 'container';
+const TWO_SECONDS = 2000;
+
 
 export async function connectRabbitMq() {
-    const env = process.env.NODE_ENV;
-
-    if (CONTAINER_ENV === env) {
-        console.info('Wating for RabbitMq to start...');
-        setInterval(async () => {
-            await connectRabbitMqAndCreateQueues();
-        }, HALF_MINUTE);
-    } else {
-        await connectRabbitMqAndCreateQueues();
-    }
+    connectRabbitMqAndCreateQueues();
 }
 
 async function connectRabbitMqAndCreateQueues() {
-    amqp.connect(configs.RABBIT_MQ_URL, (error, connection) => {
+    amqp.connect(configs.RABBIT_MQ_URL, { timeout: 180000 }, (error, connection) => {
         if (error) {
             throw error;
         }
@@ -40,12 +30,12 @@ async function connectRabbitMqAndCreateQueues() {
 
         setTimeout(function () {
             connection.close();
-        }, HALF_SECOND);
+        }, TWO_SECONDS);
         
     });
     setTimeout(function () {
         listenToSalesConfirmationQueue();
-    }, HALF_SECOND)
+    }, TWO_SECONDS)
 }
 
 async function createQueue(connection, queue, routingKey, topic) {
@@ -53,10 +43,6 @@ async function createQueue(connection, queue, routingKey, topic) {
         if (error) {
             throw error;
         }
-
-        // console.log(`Queue: ${queue}`);
-        // console.log(`Routing Key: ${routingKey}`);
-        // console.log(`Topic: ${topic}`);
 
         if (typeof queue !== 'string' || queue.length > 255) {
             throw new TypeError(`Invalid queue: ${queue}`);

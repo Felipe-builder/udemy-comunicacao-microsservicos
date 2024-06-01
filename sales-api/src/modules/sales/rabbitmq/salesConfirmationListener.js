@@ -21,7 +21,7 @@ export function listenToSalesConfirmationQueue() {
                 SALES_CONFIRMATION_QUEUE,
                 (message) => {
                     console.info(`Recieving message fro queue: ${message.content.toString()}`);
-                    OrderService.updatedOrder(message);
+                    OrderService.updateOrder(message);
                 }, {
                     noAck: true,
                 }

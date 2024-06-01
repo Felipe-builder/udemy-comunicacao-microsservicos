@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "name": "Run Script: startDev sales-api",
+            "request": "launch",
+            "command": "yarn startDev",
+            "cwd": "${workspaceFolder}/sales-api"
+        }
+    ]
+}

@@ -14,7 +14,7 @@ class OrderService {
 
   async create(req) {
     try {
-      let orderData = req.body;
+      const orderData = req.body;
       this.validateOrderData(orderData);
 
       const { authUser } = req;
@@ -35,7 +35,7 @@ class OrderService {
     }
   }
 
-  async updatedOrder(orderMessage) {
+  async updateOrder(orderMessage) {
     try {
       const order = JSON.parse(orderMessage);
       if (order.salesId && order.status) {
@@ -60,7 +60,7 @@ class OrderService {
 
   async findById(id) {
     try {
-      this.validateDataRequest(id);
+      this.validateDataRequest({ 'id': id });
       const order = await OrderRepository.findById(id);
       this.validateOrderNotfound(order);
       return {
@@ -89,21 +89,31 @@ class OrderService {
 
   createInitialOrderData(orderData, authUser) {
     return {
-      status: PENDING,
+      status: REJECTED,
       user: authUser,
-      products: orderData,
+      products: orderData.products,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
   }
 
   sendMessage(createdOrder) {
-      const message = {
-        salesId: createdOrder.id,
-        products: createdOrder.products
-      }
-      sendMessageToProductStockUpdateQueue(message);
+    const message = {
+      salesId: createdOrder.id,
+      products: createdOrder.products
+    }
+    sendMessageToProductStockUpdateQueue(message);
   }
+
+  validateDataRequest(data) {
+    const keys = Object.keys(data)
+    console.log(keys);
+    console.log(data);
+    if (!data) {
+      throw new CustomException(httpStatus.BAD_REQUEST, `The '${keys}' must be informed`)
+    }
+  }
+
 
   validateOrderData(data) {
     if (!data || !data.products) {
@@ -118,7 +128,7 @@ class OrderService {
   }
 
   async validateProductStock(order, token) {
-    let stockIsOut = await ProductClient.checkProductStock(order.products, token);
+    let stockIsOut = await ProductClient.checkProductStock(order, token);
 
     if (stockIsOut) {
       throw new CustomException(httpStatus.BAD_REQUEST, 'The stock is out for the products')

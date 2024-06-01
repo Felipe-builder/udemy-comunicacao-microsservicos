@@ -15,10 +15,11 @@ class ProductCliente {
             axios
                 .post(`${configs.PRODUCT_API_URL}/check-stock`, { headers})
                 .then((res) => {
+                    console.info(res)
                     return true;
                 })
                 .catch((err) => {
-                    console.error(err.response.message)
+                    console.error(err)
                     return false
                 })
         } catch (error) {
