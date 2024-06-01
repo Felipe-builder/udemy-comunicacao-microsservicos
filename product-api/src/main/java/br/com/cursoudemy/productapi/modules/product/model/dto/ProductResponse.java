@@ -1,15 +1,12 @@
 package br.com.cursoudemy.productapi.modules.product.model.dto;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import br.com.cursoudemy.productapi.modules.category.model.Category;
 import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
-import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierResponse;
 
 import java.util.Objects;

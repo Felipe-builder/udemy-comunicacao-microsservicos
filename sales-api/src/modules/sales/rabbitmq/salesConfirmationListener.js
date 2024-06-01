@@ -20,8 +20,8 @@ export function listenToSalesConfirmationQueue() {
             channel.consume(
                 SALES_CONFIRMATION_QUEUE,
                 (message) => {
-                    console.info(`Recieving message fro queue: ${message.content.toString()}`);
-                    OrderService.updateOrder(message);
+                    console.info(`Recieving message from queue: ${message.content.toString()}`);
+                    OrderService.updateOrder(message.content.toString());
                 }, {
                     noAck: true,
                 }

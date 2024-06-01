@@ -1,29 +1,28 @@
 package br.com.cursoudemy.productapi.modules.sales.dto;
 
-import java.util.UUID;
 
 import br.com.cursoudemy.productapi.modules.sales.enums.SalesStatus;
 import java.util.Objects;
 
 public class SalesConfirmationDTO {
     
-    private UUID salesId;
+    private String salesId;
     private SalesStatus status;
 
 
     public SalesConfirmationDTO() {
     }
 
-    public SalesConfirmationDTO(UUID salesId, SalesStatus status) {
+    public SalesConfirmationDTO(String salesId, SalesStatus status) {
         this.salesId = salesId;
         this.status = status;
     }
 
-    public UUID getSalesId() {
+    public String getSalesId() {
         return this.salesId;
     }
 
-    public void setSalesId(UUID salesId) {
+    public void setSalesId(String salesId) {
         this.salesId = salesId;
     }
 

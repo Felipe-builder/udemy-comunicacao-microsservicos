@@ -89,7 +89,7 @@ class OrderService {
 
   createInitialOrderData(orderData, authUser) {
     return {
-      status: REJECTED,
+      status: PENDING,
       user: authUser,
       products: orderData.products,
       createdAt: new Date(),
@@ -131,7 +131,7 @@ class OrderService {
     let stockIsOut = await ProductClient.checkProductStock(order, token);
 
     if (stockIsOut) {
-      throw new CustomException(httpStatus.BAD_REQUEST, 'The stock is out for the products')
+      throw new CustomException(stockIsOut.status || httpStatus.BAD_REQUEST, stockIsOut.message || 'The stock is out for the products')
     }
   }
 }

@@ -182,7 +182,7 @@ public class ProductService {
     }
     var product = findById(productQuantityDTO.getProductId());
     if (productQuantityDTO.getQuantity() > product.getQuantityAvailable()) {
-      throw new ValidationException(String.format("The product %s is out of stock.", product.getId()));
+      throw new ValidationException(String.format("The product ID %s is out of stock.", product.getId()));
     }
   }
 

@@ -1,11 +1,25 @@
 {
     "configurations": [
         {
+            "type": "java",
+            "name": "ProductApiApplication",
+            "request": "launch",
+            "mainClass": "br.com.cursoudemy.productapi.ProductApiApplication",
+            "projectName": "product-api"
+        },
+        {
             "type": "node-terminal",
             "name": "Run Script: startDev sales-api",
             "request": "launch",
             "command": "yarn startDev",
             "cwd": "${workspaceFolder}/sales-api"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Script: startDev",
+            "request": "launch",
+            "command": "npm run startDev",
+            "cwd": "${workspaceFolder}/auth-api"
         }
     ]
 }
