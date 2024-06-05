@@ -1,7 +1,6 @@
 package br.com.cursoudemy.productapi.modules.product.mapper;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,7 @@ public class ProductMapper {
 
   public ProductSalesResponse toProductSalesResponse(
     Product entity,
-    List<UUID> sales
+    List<String> sales
   ) {
     return new ProductSalesResponse(
         entity.getId(),

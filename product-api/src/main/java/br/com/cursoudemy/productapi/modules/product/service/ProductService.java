@@ -161,7 +161,9 @@ public class ProductService {
           .orElseThrow(() -> new ValidationException("The sales was not found by this product"));
       return productMapper.toProductSalesResponse(product, sales.getSalesIds());
     } catch (Exception e) {
-      throw new ValidationException("There was an error trying to get the product's sales.");
+      logger.info("Exception thrown by instance of: " + e.getClass().getName());
+      logger.info("There was an error trying to get the product's sales: {}\n" + e.getMessage());
+      throw e;
     }
   }
 

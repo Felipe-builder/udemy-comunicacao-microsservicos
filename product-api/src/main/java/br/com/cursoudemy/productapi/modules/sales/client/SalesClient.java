@@ -2,7 +2,6 @@ package br.com.cursoudemy.productapi.modules.sales.client;
 
 import java.util.Optional;
 
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +15,7 @@ import br.com.cursoudemy.productapi.modules.sales.dto.SalesProductResponse;
 )
 public interface SalesClient {
     
-    @GetMapping("products/{productId}")
+    @GetMapping("/api/order/product/{productId}")
     Optional<SalesProductResponse> findSalesByProductId(@PathVariable Long productId);
 
 }

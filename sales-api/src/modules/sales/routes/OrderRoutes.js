@@ -7,9 +7,10 @@ const router = new Router();
 
 router.use(checkToken);
 
-router.get('/api/teste', OrderController.teste);
-router.get('/api/order/:id', OrderController.findById);
 router.post('/api/order/create', OrderController.createOrder);
+router.get('/api/order/:id', OrderController.findById);
+router.get('/api/order', OrderController.findAll);
+router.get('/api/order/product/:productId', OrderController.findByProductId);
 
 
 export default router;

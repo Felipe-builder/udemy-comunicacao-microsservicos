@@ -73,6 +73,22 @@ class OrderService {
     }
   }
 
+  async findByProductId(productId) {
+    try {
+      this.validateDataRequest({ 'productId': productId });
+      const orders = await OrderRepository.findByProductId(productId);
+      this.validateOrderNotfound(orders);
+      
+      return {
+        status: httpStatus.SUCCESS,
+        salesIds: orders.map((order) => {return order._id})
+      }
+    } catch (error) {
+      console.error(error.message);
+      throw error
+    }
+  }
+
   async findAll() {
     try {
       const orders = await OrderRepository.findAll();

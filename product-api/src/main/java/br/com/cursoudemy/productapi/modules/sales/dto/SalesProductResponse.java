@@ -1,25 +1,23 @@
 package br.com.cursoudemy.productapi.modules.sales.dto;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.Objects;
 
 public class SalesProductResponse {
     
-    private List<UUID> salesIds;
+    private List<String> salesIds;
 
     public SalesProductResponse() {
     }
 
-    public SalesProductResponse(List<UUID> salesIds) {
+    public SalesProductResponse(List<String> salesIds) {
         this.salesIds = salesIds;
     }
 
-    public List<UUID> getSalesIds() {
+    public List<String> getSalesIds() {
         return this.salesIds;
     }
 
-    public void setSalesIds(List<UUID> salesIds) {
+    public void setSalesIds(List<String> salesIds) {
         this.salesIds = salesIds;
     }
 

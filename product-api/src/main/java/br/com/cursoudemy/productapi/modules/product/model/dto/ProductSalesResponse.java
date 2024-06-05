@@ -10,7 +10,6 @@ import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierResponse;
 import java.util.Objects;
-import java.util.UUID;
 
 public class ProductSalesResponse {
 
@@ -25,7 +24,7 @@ public class ProductSalesResponse {
     
     private SupplierResponse supplier;
 
-    private List<UUID> sales;
+    private List<String> sales;
 
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
@@ -38,7 +37,7 @@ public class ProductSalesResponse {
     public ProductSalesResponse() {
     }
 
-    public ProductSalesResponse(Long id, String name, Integer quantityAvailable, CategoryResponse category, SupplierResponse supplier, List<UUID> sales, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ProductSalesResponse(Long id, String name, Integer quantityAvailable, CategoryResponse category, SupplierResponse supplier, List<String> sales, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.quantityAvailable = quantityAvailable;
@@ -89,11 +88,11 @@ public class ProductSalesResponse {
         this.category = category;
     }
 
-    public List<UUID> getSales() {
+    public List<String> getSales() {
         return this.sales;
     }
 
-    public void setSales(List<UUID> sales) {
+    public void setSales(List<String> sales) {
         this.sales = sales;
     }
 
