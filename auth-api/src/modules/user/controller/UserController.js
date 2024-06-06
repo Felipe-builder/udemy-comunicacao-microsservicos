@@ -4,9 +4,16 @@ class UserController {
 
   async getAccessToken(req, res, next) {
     try {
+      const { transactionid, serviceid } = req.headers;
+      console.log(
+        `Request to POST login with data ${JSON.stringify(req.body)} | transactionID: ${transactionid} | serviceID: ${serviceid}`
+      );
       const { email, password } = req.body;
-      const result = await UserService.getAccessToken(email, password)
-      return res.status(result.status).json(result)
+      const response = await UserService.getAccessToken(email, password)
+      console.log(
+        `Response to POST login with data ${JSON.stringify(response)} | ${transactionid} | serviceID: ${serviceid}`
+      );
+      return res.status(response.status).json(response)
     } catch (error) {
       next(error)
     }
@@ -14,8 +21,8 @@ class UserController {
 
   async createUser(req, res, next) {
     try {
-      const result = await UserService.create(req.body)
-      return res.status(result.status).json(result)
+      const response = await UserService.create(req.body)
+      return res.status(response.status).json(response)
     } catch (error) {
       next(error)
     }
