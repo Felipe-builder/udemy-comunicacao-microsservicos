@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static br.com.cursoudemy.productapi.config.RequestUtil.getCurrenRequest;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.cursoudemy.productapi.config.handlers.SuccessResponse;
 import br.com.cursoudemy.productapi.exceptions.NotFoundException;
@@ -25,10 +28,10 @@ import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductSalesResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductStockDTO;
-import br.com.cursoudemy.productapi.modules.product.rabbitmq.ProductStockListener;
 import br.com.cursoudemy.productapi.modules.product.repository.ProductRepository;
 import br.com.cursoudemy.productapi.modules.sales.client.SalesClient;
 import br.com.cursoudemy.productapi.modules.sales.dto.SalesConfirmationDTO;
+import br.com.cursoudemy.productapi.modules.sales.dto.SalesProductResponse;
 import br.com.cursoudemy.productapi.modules.sales.enums.SalesStatus;
 import br.com.cursoudemy.productapi.modules.sales.rabbitmq.SalesConfirmationSender;
 import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
@@ -39,7 +42,7 @@ import jakarta.transaction.Transactional;
 @Service
 public class ProductService {
 
-  private static final Logger logger = Logger.getLogger(ProductStockListener.class.getName());
+  private static final Logger logger = Logger.getLogger(ProductService.class.getName());
 
   @Autowired
   private ProductMapper productMapper;
@@ -150,15 +153,15 @@ public class ProductService {
       logger.info("Error while try to update stock for message with error: {}\n" + e.getMessage());
       salesConfirmationSender
           .sendSalesConfirmationMessage(
-              new SalesConfirmationDTO(productStockDTO.getSalesId(), SalesStatus.REJECTED));
+              new SalesConfirmationDTO(productStockDTO.getSalesId(), SalesStatus.REJECTED,
+                  productStockDTO.getTransactionid()));
     }
   }
 
   public ProductSalesResponse findProductsSales(Long id) {
     var product = findById(id);
     try {
-      var sales = salesClient.findSalesByProductId(product.getId())
-          .orElseThrow(() -> new ValidationException("The sales was not found by this product"));
+      var sales = getSalesByProductId(product.getId());
       return productMapper.toProductSalesResponse(product, sales.getSalesIds());
     } catch (Exception e) {
       logger.info("Exception thrown by instance of: " + e.getClass().getName());
@@ -168,14 +171,33 @@ public class ProductService {
   }
 
   public SuccessResponse checkProductStock(ProductCheckStockRequest request) {
-    if (isEmpty(request) || isEmpty(request.getProducts()) ) {
-      throw new ValidationException("The request data and products must be informed");
-    }
+    try {
+      var currentRequest = getCurrenRequest();
+      var transactionid = currentRequest.getHeader("transactionid");
+      var serviceid = currentRequest.getAttribute("serviceid");
+      logger.info(String.format(
+          "Request POST product stock with data %s | [transactionID: %s | serviceID: %s]",
+          new ObjectMapper().writeValueAsString(request),
+          transactionid,
+          serviceid));
 
-    request
-      .getProducts()
-      .forEach(this::validateStock);
-    return SuccessResponse.create("The stock is ok!");
+      if (isEmpty(request) || isEmpty(request.getProducts())) {
+        throw new ValidationException("The request data and products must be informed");
+      }
+
+      request
+          .getProducts()
+          .forEach(this::validateStock);
+      var response = SuccessResponse.create("The stock is ok!");
+      logger.info(String.format(
+          "Response POST product stock with data %s | [transactionID: %s | serviceID: %s]",
+          new ObjectMapper().writeValueAsString(response),
+          transactionid,
+          serviceid));
+      return response;
+    } catch (Exception e) {
+      throw new ValidationException(e.getMessage());
+    }
   }
 
   private void validateStock(ProductQuantityDTO productQuantityDTO) {
@@ -202,7 +224,7 @@ public class ProductService {
     if (!isEmpty(productsForUpdate)) {
       productRepository.saveAll(productsForUpdate);
       SalesConfirmationDTO approvedMessage = new SalesConfirmationDTO(productStockDTO.getSalesId(),
-          SalesStatus.APPROVED);
+          SalesStatus.APPROVED, productStockDTO.getTransactionid());
       salesConfirmationSender.sendSalesConfirmationMessage(approvedMessage);
     }
   }
@@ -236,5 +258,29 @@ public class ProductService {
     }
   }
 
-  
+  private SalesProductResponse getSalesByProductId(Long productId) {
+    try {
+      var currentRequest = getCurrenRequest();
+      var transactionid = currentRequest.getHeader("transactionid");
+      var serviceid = currentRequest.getHeader("serviceid");
+
+      logger.info(String.format(
+          "Sending GET request to orders by productId %s | [transactionID: %s | serviceID: %s]",
+          productId,
+          transactionid,
+          serviceid));
+      var response = salesClient
+          .findSalesByProductId(productId)
+          .orElseThrow(() -> new ValidationException("The sales was not found by this product"));
+      logger.info(String.format(
+            "Recieving response from orders by productId with data %s | [transactionID: %s | serviceID: %s]",
+            new ObjectMapper().writeValueAsString(response),
+            transactionid,
+            serviceid));
+      return response;
+    } catch (Exception e) {
+      throw new ValidationException("The sales could not be found.");
+    }
+  }
+
 }

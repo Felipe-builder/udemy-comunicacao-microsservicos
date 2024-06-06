@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductStockDTO;
 import br.com.cursoudemy.productapi.modules.product.service.ProductService;
 
-
 @Component
 public class ProductStockListener {
     private static final Logger logger = Logger.getLogger(ProductStockListener.class.getName());
@@ -22,7 +21,10 @@ public class ProductStockListener {
 
     @RabbitListener(queues = "${app-config.rabbit.queue.product-stock}")
     public void recieveProductStockMessage(ProductStockDTO productStockDTO) throws JsonProcessingException {
-        logger.info("Recebendo mensagem: {}" + new ObjectMapper().writeValueAsString(productStockDTO));
+        logger.info(String.format(
+                "Revieving message with data: %s and TransactionID: %s",
+                new ObjectMapper().writeValueAsString(productStockDTO),
+                productStockDTO.getTransactionid()));
         productService.updateProductStock(productStockDTO);
     }
 
