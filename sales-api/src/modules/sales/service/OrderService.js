@@ -14,21 +14,27 @@ class OrderService {
 
   async create(req) {
     try {
+      const { transactionid, serviceid, authorization } = req.headers;
       const orderData = req.body;
-      this.validateOrderData(orderData);
-
       const { authUser } = req;
-      const { authorization } = req.headers;
+      console.log(
+        `Request to POST new order with data ${JSON.stringify(req.body)} | transactionID: ${transactionid} | serviceID: ${serviceid}`
+      );
+      this.validateOrderData(orderData);
+      
       let order = this.createInitialOrderData(orderData, authUser)
-
-      await this.validateProductStock(order, authorization);
+      
+      await this.validateProductStock(order, authorization, transactionid);
       let createdOrder = await OrderRepository.create(order);
-      this.sendMessage(createdOrder);
-
-      return {
+      this.sendMessage(createdOrder, transactionid);
+      const response = {
         status: httpStatus.SUCCESS,
         createdOrder
       }
+      console.log(
+        `Response to POST new order with data ${JSON.stringify(response)} | ${transactionid} | serviceID: ${serviceid}`
+      );
+      return response 
     } catch (error) {
       console.error(error.message);
       throw error
@@ -46,7 +52,7 @@ class OrderService {
           await OrderRepository.create(existingOrder)
         }
       } else {
-        console.warn('The order message was not complete.')
+        console.warn(`The order message was not complete. TransactionID: ${orderMessage.transactionid}`)
       }
       return {
         status: httpStatus.SUCCESS,
@@ -58,31 +64,50 @@ class OrderService {
   }
 
 
-  async findById(id) {
+  async findById(req) {
     try {
+      const { transactionid, serviceid } = req.headers;
+      const { id } = req.params;
+      console.log(
+        `Request to GET find order by id ${id} | transactionID: ${transactionid} | serviceID: ${serviceid}`
+      );
       this.validateDataRequest({ 'id': id });
       const order = await OrderRepository.findById(id);
       this.validateOrderNotfound(order);
-      return {
+      const response = {
         status: httpStatus.SUCCESS,
         order
       }
+      console.log(
+        `Response to GET find order by id with data ${JSON.stringify(response)} | ${transactionid} | serviceID: ${serviceid}`
+      );
+      return response
     } catch (error) {
       console.error(error.message);
       throw error
     }
   }
 
-  async findByProductId(productId) {
+  async findByProductId(req) {
     try {
+      const { transactionid, serviceid } = req.headers;
+      const { productId } = req.params;
+      console.log(
+        `Request to GET find order by product ${productId} | transactionID: ${transactionid} | serviceID: ${serviceid}`
+      );
+
       this.validateDataRequest({ 'productId': productId });
       const orders = await OrderRepository.findByProductId(productId);
       this.validateOrderNotfound(orders);
       
-      return {
+      const response = {
         status: httpStatus.SUCCESS,
         salesIds: orders.map((order) => {return order._id})
       }
+      console.log(
+        `Response to GET find order by product with data ${JSON.stringify(response)} | ${transactionid} | serviceID: ${serviceid}`
+      );
+      return response
     } catch (error) {
       console.error(error.message);
       throw error
@@ -91,12 +116,19 @@ class OrderService {
 
   async findAll() {
     try {
+      const { transactionid, serviceid } = req.headers;
+      console.log(
+        `Request to GET find all orders | transactionID: ${transactionid} | serviceID: ${serviceid}`
+      );
       const orders = await OrderRepository.findAll();
-
-      return {
+      const response = {
         status: httpStatus.SUCCESS,
         orders
       }
+      console.log(
+        `Response to GET find all orders with data ${JSON.stringify(response)} | ${transactionid} | serviceID: ${serviceid}`
+      );
+      return response
     } catch (error) {
       console.error(error.message);
       throw error
@@ -113,18 +145,17 @@ class OrderService {
     }
   }
 
-  sendMessage(createdOrder) {
+  sendMessage(createdOrder, transactionid) {
     const message = {
       salesId: createdOrder.id,
-      products: createdOrder.products
+      products: createdOrder.products,
+      transactionid
     }
     sendMessageToProductStockUpdateQueue(message);
   }
 
   validateDataRequest(data) {
     const keys = Object.keys(data)
-    console.log(keys);
-    console.log(data);
     if (!data) {
       throw new CustomException(httpStatus.BAD_REQUEST, `The '${keys}' must be informed`)
     }
@@ -143,8 +174,8 @@ class OrderService {
     }
   }
 
-  async validateProductStock(order, token) {
-    let stockIsOut = await ProductClient.checkProductStock(order, token);
+  async validateProductStock(order, token, transactionid) {
+    let stockIsOut = await ProductClient.checkProductStock(order, token, transactionid);
 
     if (stockIsOut) {
       throw new CustomException(stockIsOut.status || httpStatus.BAD_REQUEST, stockIsOut.message || 'The stock is out for the products')

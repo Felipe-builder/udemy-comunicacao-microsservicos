@@ -13,8 +13,7 @@ class OrderController {
 
   async findById(req, res, next) {
     try {
-      const { id } = req.params;
-      const response = await OrderService.findById(id);
+      const response = await OrderService.findById(req);
       return res.status(200).json(response)
     } catch (error) {
       next(error)
@@ -32,8 +31,7 @@ class OrderController {
 
   async findByProductId(req, res, next) {
     try {
-      const { productId } = req.params;
-      const response = await OrderService.findByProductId(productId);
+      const response = await OrderService.findByProductId(req);
       return res.status(200).json(response)
     } catch (error) {
       next(error)

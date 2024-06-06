@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { BAD_REQUEST  } from './constants/httpStatus.js';
-import CustomException from './exceptions/CustomException.js';
+import { BAD_REQUEST } from './constants/httpStatus.js'
+import CustomException from './exceptions/CustomException.js'
 
 export default (req, res, next) => {
     let { transactionid } = req.headers;
