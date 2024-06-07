@@ -10,6 +10,7 @@ export const configs = {
     HOST: process.env.DB_HOST || "localhost",
     PORT: process.env.DB_PORT || 5432,
   },
+  PORT: env.PORT || '8080',
   API_SECRET: env.API_SECRET || "YXV0aC1hcGktc2VjcmV0LWRldi0xMjM0NTY=",
   // Adicione outras configurações conforme necessário
 };
