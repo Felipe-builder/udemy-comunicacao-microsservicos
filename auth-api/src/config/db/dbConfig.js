@@ -2,8 +2,10 @@ import Sequelize from 'sequelize';
 
 import { configs } from '../constants/configs.js'
 
-const sequelize = new Sequelize("auth-db", "admin", "123456", {
-  host: "localhost",
+const { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } = configs.DATABASE
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
   dialect: "postgres",
   quoteIdentifiers: false,
   define: {
@@ -12,8 +14,13 @@ const sequelize = new Sequelize("auth-db", "admin", "123456", {
     undescored: true,
     undescoredAll: true,
     freezeTableName: true,
+  },
+  pool: {
+    acquire: 180000
   }
 });
+
+
 
 sequelize
   .authenticate()

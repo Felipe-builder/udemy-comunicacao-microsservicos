@@ -11,7 +11,6 @@ const PORT = env.PORT || 8080;
 
 // db.createInitialData();
 app.use(express.json())
-app.use(tracing);
 
 app.get('/api/status', (req, res) => {
   return res.status(200).json({
@@ -20,6 +19,8 @@ app.get('/api/status', (req, res) => {
     httpStatus: 200,
   })
 })
+
+app.use(tracing);
 
 app.use(userRoutes);
 

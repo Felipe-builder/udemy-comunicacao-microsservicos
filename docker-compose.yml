@@ -7,8 +7,6 @@ services:
     ports:
       - "5432:5432"
     environment:
-      API_SECRET: YXV0aC1hcGktc2VjcmV0LWNvbnRhaW5lci0xMjM0NTY=
-      PORT: 8080
       POSTGRES_DB: auth-db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123456
@@ -16,14 +14,15 @@ services:
     volumes:
       - auth-pg-volume:/var/lib/postgresql/data
     restart: always
-
+    networks:
+      - sales_network
+      
   product-db:
     container_name: product-db
     image: postgres:11
     ports:
       - "5433:5432"
     environment:
-      API_SECRET: YXV0aC1hcGktc2VjcmV0LWNvbnRhaW5lci0xMjM0NTY=
       POSTGRES_DB: product-db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 123456
@@ -31,6 +30,8 @@ services:
     volumes:
       - product-pg-volume:/var/lib/postgresql/data
     restart: always
+    networks:
+      - sales_network
 
   sales-db:
     container_name: sales-db
@@ -43,8 +44,9 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: 123456
-      API_SECRET: 
     restart: always
+    networks:
+      - sales_network
 
   sales-rabbit:
     image: rabbitmq:3-management
@@ -56,7 +58,12 @@ services:
       - "15672:15672"
     volumes:
       - sales-rabbit-volume:/data/db
+    environment:
+      RABBIT_DEFAULT_USER: guest
+      RABBIT_DEFAULT_PASS: guest
     restart: always
+    networks:
+      - sales_network
 
   auth-api:
     container_name: auth-api
@@ -67,13 +74,15 @@ services:
       - NODE_ENV=container
       - PORT=8080
       - API_SECRET=YXV0aC1hcGktc2VjcmV0LWRldi0xMjM0NTY=
-      - DB_USER=auth-db
-      - DB_NAME=admin
+      - DB_USER=admin
+      - DB_NAME=auth-db
       - DB_PASSWORD=123456
       - DB_HOST=auth-db
       - DB_PORT=5433
     depends_on:
       - auth-db
+    networks:
+      - sales_network
 
   product-api:
     container_name: product-api
@@ -84,11 +93,11 @@ services:
       - NODE_ENV=container
       - PORT=8081
       - API_SECRET=YXV0aC1hcGktc2VjcmV0LWRldi0xMjM0NTY=
-      - DB_USER=product-db
-      - DB_NAME=admin
+      - DB_USER=admin
+      - DB_NAME=product-db
       - DB_PASSWORD=123456
       - DB_HOST=product-db
-      - DB_PORT=5433
+      - DB_PORT=5432
       - RABBIT_MQ_HOST=sales-rabbit
       - RABBIT_MQ_PORT=5672
       - RABBIT_MQ_USERNAME=guest
@@ -98,22 +107,26 @@ services:
     depends_on:
       - product-db
       - sales-rabbit
+    networks:
+      - sales_network 
 
   sales-api:
     container_name: sales-api
     build: ./sales-api
     ports:
       - "8082:8082"
+    depends_on:
+      - sales-db
+      - sales-rabbit
+    networks:
+      - sales_network
     environment:
       - NODE_ENV=container
       - PORT=8082
       - API_SECRET=YXV0aC1hcGktc2VjcmV0LWRldi0xMjM0NTY=
-      - MONGO_DB_URL=mongodb://admin:123456@localhost:27017/sales
-      - RABBIT_MQ_URL=amqp://localhost:5672
-      - PRODUCT_API_URL=http://localhost:8081/api/product
-    depends_on:
-      - sales-db
-      - sales-rabbit
+      - MONGO_DB_URL=mongodb://admin:123456@sales-db:27017/sales
+      - RABBIT_MQ_URL=amqp://guest:guest@sales-rabbit:5672/
+      - PRODUCT_API_URL=http://product-api:8081/api/product
 
 
 volumes:
@@ -124,3 +137,7 @@ volumes:
   sales-mongodb-volume:
 
   sales-rabbit-volume:
+
+networks:
+  sales_network:
+    driver: bridge

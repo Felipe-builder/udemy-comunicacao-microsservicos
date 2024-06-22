@@ -12,7 +12,7 @@ const app = express();
 const env = process.env;
 const PORT = env.PORT || 8082;
 const CONTAINER_ENV = "container";
-const THREE_MINUTES = 180000;
+const THREE_MINUTES = 15000;
 
 startApplication();
 
@@ -30,7 +30,6 @@ async function startApplication() {
 }
 
 app.use(express.json())
-app.use(tracing)
 
 app.get("/", (req, res) => {
   return res.status(200).json(getOkResponse());
@@ -48,6 +47,7 @@ function getOkResponse() {
   }
 }
 
+app.use(tracing)
 
 app.use(orderRoutes);
 app.use(ExceptionHandler)

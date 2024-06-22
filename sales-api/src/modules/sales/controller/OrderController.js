@@ -22,7 +22,7 @@ class OrderController {
 
   async findAll(req, res, next) {
     try {
-      const response = await OrderService.findAll();
+      const response = await OrderService.findAll(req);
       return res.status(200).json(response)
     } catch (error) {
       next(error)
