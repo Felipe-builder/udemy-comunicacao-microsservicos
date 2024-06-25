@@ -3,7 +3,6 @@ package br.com.cursoudemy.productapi.modules.product.rabbitmq;
 import java.util.logging.Logger;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,8 +15,11 @@ import br.com.cursoudemy.productapi.modules.product.service.ProductService;
 public class ProductStockListener {
     private static final Logger logger = Logger.getLogger(ProductStockListener.class.getName());
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductStockListener(ProductService productService) {
+        this.productService = productService;
+    }
 
     @RabbitListener(queues = "${app-config.rabbit.queue.product-stock}")
     public void recieveProductStockMessage(ProductStockDTO productStockDTO) throws JsonProcessingException {

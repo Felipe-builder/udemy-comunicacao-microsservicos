@@ -3,7 +3,6 @@ package br.com.cursoudemy.productapi.modules.product.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.cursoudemy.productapi.modules.category.mapper.CategoryMapper;
@@ -18,11 +17,14 @@ import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 @Component
 public class ProductMapper {
 
-  @Autowired
-  CategoryMapper categoryMapper;
+  private final CategoryMapper categoryMapper;
 
-  @Autowired
-  SupplierMapper supplierMapper;
+  private final SupplierMapper supplierMapper;
+
+  public ProductMapper(CategoryMapper categoryMapper, SupplierMapper supplierMapper) {
+    this.categoryMapper = categoryMapper;
+    this.supplierMapper = supplierMapper;
+  }
 
   public ProductResponse toResponse(Product entity) {
     return new ProductResponse(

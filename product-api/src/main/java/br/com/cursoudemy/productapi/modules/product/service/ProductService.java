@@ -2,13 +2,11 @@ package br.com.cursoudemy.productapi.modules.product.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import static br.com.cursoudemy.productapi.config.RequestUtil.getCurrenRequest;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -44,25 +42,31 @@ public class ProductService {
 
   private static final Logger logger = Logger.getLogger(ProductService.class.getName());
 
-  @Autowired
-  private ProductMapper productMapper;
+  private final ProductMapper productMapper;
 
-  @Autowired
-  private ProductRepository productRepository;
+  private final ProductRepository productRepository;
 
   @Lazy
-  @Autowired
-  private CategoryService categoryService;
+  private final CategoryService categoryService;
 
   @Lazy
-  @Autowired
-  private SupplierService supplierService;
+  private final SupplierService supplierService;
 
-  @Autowired
-  private SalesConfirmationSender salesConfirmationSender;
+  private final SalesConfirmationSender salesConfirmationSender;
 
-  @Autowired
-  private SalesClient salesClient;
+  private final SalesClient salesClient;
+  
+  
+  public ProductService(ProductMapper productMapper, ProductRepository productRepository,
+      @Lazy CategoryService categoryService, @Lazy SupplierService supplierService, SalesConfirmationSender salesConfirmationSender,
+      SalesClient salesClient) {
+    this.productMapper = productMapper;
+    this.productRepository = productRepository;
+    this.categoryService = categoryService;
+    this.supplierService = supplierService;
+    this.salesConfirmationSender = salesConfirmationSender;
+    this.salesClient = salesClient;
+  }
 
   @Cacheable(value = "products", key = "#id")
   public boolean isSupplierExists(Long id) {

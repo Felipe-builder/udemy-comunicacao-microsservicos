@@ -1,7 +1,6 @@
 package br.com.cursoudemy.productapi.modules.product.model.dto;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ProductCheckStockRequest {
     

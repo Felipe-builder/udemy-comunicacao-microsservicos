@@ -1,9 +1,7 @@
 package br.com.cursoudemy.productapi.modules.supplier.service;
 
 import java.util.List;
-import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +20,18 @@ import jakarta.transaction.Transactional;
 @Service
 public class SupplierService {
 
-  @Autowired
-  private SupplierMapper supplierMapper;
+  private final SupplierMapper supplierMapper;
 
-  @Autowired
-  private SupplierRepository supplierRepository;
+  private final  SupplierRepository supplierRepository;
 
-  @Autowired
-  private ProductService productService;
+  private final ProductService productService;
+
+  public SupplierService(SupplierMapper supplierMapper, SupplierRepository supplierRepository,
+      ProductService productService) {
+    this.supplierMapper = supplierMapper;
+    this.supplierRepository = supplierRepository;
+    this.productService = productService;
+  }
 
   @Cacheable(value = "suppliers", key = "#id")
   public boolean isSupplierExists(Long id) {

@@ -2,7 +2,6 @@ package br.com.cursoudemy.productapi.modules.supplier.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cursoudemy.productapi.config.handlers.SuccessResponse;
-import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
-import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierRequest;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierResponse;
 import br.com.cursoudemy.productapi.modules.supplier.service.SupplierService;
@@ -25,8 +22,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/supplier")
 public class SupplierController {
 
-  @Autowired
-  private SupplierService supplierService;
+  private final SupplierService supplierService;
+
+  public SupplierController(SupplierService supplierService) {
+    this.supplierService = supplierService;
+  }
 
   @PostMapping
   public ResponseEntity<SupplierResponse> create(@Valid @RequestBody SupplierRequest request) {

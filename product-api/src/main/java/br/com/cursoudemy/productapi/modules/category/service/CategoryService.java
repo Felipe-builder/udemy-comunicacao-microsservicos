@@ -2,7 +2,6 @@ package br.com.cursoudemy.productapi.modules.category.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +20,18 @@ import jakarta.transaction.Transactional;
 @Service
 public class CategoryService {
 
-  @Autowired
-  private CategoryMapper categoryMapper;
+  private final CategoryMapper categoryMapper;
 
-  @Autowired
-  private CategoryRepository categoryRepository;
+  private final CategoryRepository categoryRepository;
 
-  @Autowired
-  private ProductService productService;
+  private final ProductService productService;
+
+  public CategoryService(CategoryMapper categoryMapper, CategoryRepository categoryRepository,
+      ProductService productService) {
+    this.categoryMapper = categoryMapper;
+    this.categoryRepository = categoryRepository;
+    this.productService = productService;
+  }
 
   @Cacheable(value = "categories", key = "#id")
   public boolean isSupplierExists(Long id) {

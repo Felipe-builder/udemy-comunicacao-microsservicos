@@ -1,11 +1,8 @@
 package br.com.cursoudemy.productapi.modules.product.controllers;
 
-import static br.com.cursoudemy.productapi.config.RequestUtil.getCurrenRequest;
-
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,14 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import br.com.cursoudemy.productapi.config.handlers.SuccessResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductCheckStockRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductRequest;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductResponse;
 import br.com.cursoudemy.productapi.modules.product.model.dto.ProductSalesResponse;
-import br.com.cursoudemy.productapi.modules.product.rabbitmq.ProductStockListener;
 import br.com.cursoudemy.productapi.modules.product.service.ProductService;
 import jakarta.validation.Valid;
 
@@ -33,9 +27,11 @@ public class ProductController {
 
   private static final Logger logger = Logger.getLogger(ProductController.class.getName());
 
+  private final ProductService productService;
 
-  @Autowired
-  private ProductService productService;
+  public ProductController(ProductService productService) {
+    this.productService = productService;
+  }
 
   @PostMapping()
   public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest request) {

@@ -3,7 +3,6 @@ package br.com.cursoudemy.productapi.modules.sales.rabbitmq;
 import java.util.logging.Logger;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +16,12 @@ public class SalesConfirmationSender {
     
     private static final Logger logger = Logger.getLogger(ProductStockListener.class.getName());
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
+    private final RabbitTemplate rabbitTemplate;
         
+    public SalesConfirmationSender(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
     @Value("${app-config.rabbit.exchange.product}")
     private String productTopicExchange;
  

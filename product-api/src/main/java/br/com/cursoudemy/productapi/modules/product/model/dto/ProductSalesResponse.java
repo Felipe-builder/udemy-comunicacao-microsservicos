@@ -5,9 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import br.com.cursoudemy.productapi.modules.category.model.Category;
 import br.com.cursoudemy.productapi.modules.category.model.dto.CategoryResponse;
-import br.com.cursoudemy.productapi.modules.supplier.model.Supplier;
 import br.com.cursoudemy.productapi.modules.supplier.model.dto.SupplierResponse;
 import java.util.Objects;
 
