@@ -55,17 +55,20 @@ public class ProductService {
   private final SalesConfirmationSender salesConfirmationSender;
 
   private final SalesClient salesClient;
+
+  private final ObjectMapper objectMapper;
   
   
   public ProductService(ProductMapper productMapper, ProductRepository productRepository,
       @Lazy CategoryService categoryService, @Lazy SupplierService supplierService, SalesConfirmationSender salesConfirmationSender,
-      SalesClient salesClient) {
+      SalesClient salesClient, ObjectMapper objectMapper) {
     this.productMapper = productMapper;
     this.productRepository = productRepository;
     this.categoryService = categoryService;
     this.supplierService = supplierService;
     this.salesConfirmationSender = salesConfirmationSender;
     this.salesClient = salesClient;
+    this.objectMapper = objectMapper;
   }
 
   @Cacheable(value = "products", key = "#id")
@@ -181,7 +184,7 @@ public class ProductService {
       var serviceid = currentRequest.getAttribute("serviceid");
       logger.info(String.format(
           "Request POST product stock with data %s | [transactionID: %s | serviceID: %s]",
-          new ObjectMapper().writeValueAsString(request),
+          objectMapper.writeValueAsString(request),
           transactionid,
           serviceid));
 
@@ -195,7 +198,7 @@ public class ProductService {
       var response = SuccessResponse.create("The stock is ok!");
       logger.info(String.format(
           "Response POST product stock with data %s | [transactionID: %s | serviceID: %s]",
-          new ObjectMapper().writeValueAsString(response),
+          objectMapper.writeValueAsString(response),
           transactionid,
           serviceid));
       return response;
@@ -265,6 +268,7 @@ public class ProductService {
   private SalesProductResponse getSalesByProductId(Long productId) {
     try {
       var currentRequest = getCurrenRequest();
+      var token = currentRequest.getHeader("Authorization");
       var transactionid = currentRequest.getHeader("transactionid");
       var serviceid = currentRequest.getHeader("serviceid");
 
@@ -274,11 +278,11 @@ public class ProductService {
           transactionid,
           serviceid));
       var response = salesClient
-          .findSalesByProductId(productId)
+          .findSalesByProductId(productId, token, transactionid)
           .orElseThrow(() -> new ValidationException("The sales was not found by this product"));
       logger.info(String.format(
             "Recieving response from orders by productId with data %s | [transactionID: %s | serviceID: %s]",
-            new ObjectMapper().writeValueAsString(response),
+            objectMapper.writeValueAsString(response),
             transactionid,
             serviceid));
       return response;

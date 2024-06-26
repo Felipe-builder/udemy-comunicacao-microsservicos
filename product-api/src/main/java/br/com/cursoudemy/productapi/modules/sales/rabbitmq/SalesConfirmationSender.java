@@ -13,30 +13,31 @@ import br.com.cursoudemy.productapi.modules.sales.dto.SalesConfirmationDTO;
 
 @Component
 public class SalesConfirmationSender {
-    
+
     private static final Logger logger = Logger.getLogger(ProductStockListener.class.getName());
 
     private final RabbitTemplate rabbitTemplate;
-        
-    public SalesConfirmationSender(RabbitTemplate rabbitTemplate) {
+    private final ObjectMapper objectMapper;
+
+    public SalesConfirmationSender(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
+        this.objectMapper = objectMapper;
     }
 
     @Value("${app-config.rabbit.exchange.product}")
     private String productTopicExchange;
- 
+
     @Value("${app-config.rabbit.routingKey.sales-confirmation}")
     private String salesConfirmationKey;
 
     public void sendSalesConfirmationMessage(SalesConfirmationDTO salesConfirmationDTO) {
         try {
-            logger.info("Sending message: {}\n" + new ObjectMapper().writeValueAsString(salesConfirmationDTO));
+            logger.info("Sending message: {}\n" + objectMapper.writeValueAsString(salesConfirmationDTO));
             rabbitTemplate.convertAndSend(productTopicExchange, salesConfirmationKey, salesConfirmationDTO);
             logger.info("Message was sent successfully!");
         } catch (Exception e) {
             logger.severe("Error while trying to send sales confirmation message: " + e);
         }
     }
-
 
 }
