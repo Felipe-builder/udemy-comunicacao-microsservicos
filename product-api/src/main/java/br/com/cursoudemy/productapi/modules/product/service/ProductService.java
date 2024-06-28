@@ -287,6 +287,7 @@ public class ProductService {
             serviceid));
       return response;
     } catch (Exception e) {
+      logger.info("The sales could not be found.: \n" + e.getMessage());
       throw new ValidationException("The sales could not be found.");
     }
   }
