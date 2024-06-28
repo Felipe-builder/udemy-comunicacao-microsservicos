@@ -10,15 +10,23 @@ const PORT = env.PORT || 8080;
 
 
 // db.createInitialData();
-app.use(express.json())
+app.use(express.json());
 
+
+app.get('/', (req, res) => {
+  return res.status(200).json(getStatusResponse())
+})
 app.get('/api/status', (req, res) => {
-  return res.status(200).json({
+  return res.status(200).json(getStatusResponse())
+})
+
+function getStatusResponse() {
+  return {
     service: "Auth-API",
     status: "up",
     httpStatus: 200,
-  })
-})
+  }
+}
 
 app.use(tracing);
 
